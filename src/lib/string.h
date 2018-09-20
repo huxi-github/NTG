@@ -7,7 +7,7 @@
 
 #ifndef STRING_H_
 #define STRING_H_
-typedef struct string
+typedef struct string;
 struct string{
 	  char *chaine;
 	  uint pos;

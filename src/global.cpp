@@ -7,6 +7,7 @@
 
 #include "global.h"
 #include <assert.h>
+#include "string.h"
 ///*
 // * 用户数
 // */
@@ -25,14 +26,14 @@ void init(void)
 {
 
 	/*为离线队列和浏览队列分配空间*/
-	offline_queue = calloc(1, sizeof(a_queue));
-	browse_queue = calloc(1, sizeof(a_queue));
+	offline_queue = (a_queue*)calloc(1, sizeof(a_queue));
+	browse_queue = (a_queue*)calloc(1, sizeof(a_queue));
 	/*初始化队列*/
 	aq_init(offline_queue, 1, OFF_CYCLE);
 	aq_init(browse_queue, 0, BR_CYCLE);
 
 	/*给用户分配内存空间*/
-	user_t *puser = calloc(USER_MAX, sizeof(user_t));
+	user_t *puser = (user_t *)calloc(USER_MAX, sizeof(user_t));
 	/*初始化用户并加入队列*/
 	srand((unsigned) time(NULL));
 	int i = 0;
@@ -123,7 +124,7 @@ void set_user_property(user_t *user, int p_type, void * p_value)
 		user->time = *(int *) p_value;
 		break;
 	case P_URL:
-		strcpy(user->url, p_value);
+		strcpy(user->url, (char *)p_value);
 		break;
 	case P_STATE:
 		user->state = *(int *) p_value;
@@ -154,13 +155,13 @@ void insert_queue(void * queue, int type, user_t* user)
 	{
 	case Q_A:
 	{
-		a_queue* a_q = queue;
+		a_queue* a_q = (a_queue*)queue;
 		pthread_mutex_lock(&a_q->mutex);
 		int size = a_q->cur_size++;
 		/*user对象插入队列*/
 		if (size == 0)
 		{ /*队列为空时* */
-			a_q->head.next = user;
+			a_q->head->next = user;
 			a_q->tail = user;/*修改队列的tail属性* */
 			pthread_mutex_unlock(&a_q->mutex);
 			pthread_cond_signal(&a_q->cond);/*通知定时刷新线程*/
@@ -168,7 +169,7 @@ void insert_queue(void * queue, int type, user_t* user)
 		}
 		/*队列不为空时*/
 		/*获取元素的插入位置**/
-		user_t * ip = search_insert_point(&a_q->head, a_q->tail, user->time);
+		user_t * ip = search_insert_point(a_q->head, a_q->tail, user->time);
 		if (ip == a_q->tail)
 		{/*当插入队列尾部时*/
 			ip->next = user;
@@ -184,7 +185,7 @@ void insert_queue(void * queue, int type, user_t* user)
 		break;
 	case Q_B:
 	{/*线程池队列*  */
-		b_queue * thread_pool = queue;
+		b_queue * thread_pool = (b_queue *)queue;
 		pthread_mutex_lock(&thread_pool->mutex);
 		user_t *member = thread_pool->head;
 		if (member != NULL)

@@ -14,7 +14,7 @@ struct user_ops web_user_ops =
 {
 		.builed = web_builed,
 		.request = NULL,
-		.receive = web_receive,
+		.receive = (size_t (*)(int, char *, size_t))web_receive,
 		.behavior =web_behavior,
 };
 /*

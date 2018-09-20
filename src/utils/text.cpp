@@ -255,14 +255,14 @@ bool matchContentType (char *ct) {
 
 #else // SPECIFICSEARCH is not defined
 
-bool matchPrivExt(char *file) {
-	return false;
-}
-bool matchContentType(char *ct) {
-	assert(false);
-	return true;
-}
+//bool matchPrivExt(char *file) {
+//    return false;
+//}
+//bool matchContentType(char *ct) {
+//    assert(false);
+//    return true;
+//}
 
 #endif // SPECIFICSEARCH
 
- end of text.cc
+// end of text.cc

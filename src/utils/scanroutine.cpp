@@ -74,9 +74,9 @@ void * scan_routine(void *arg)
 		/***********************************************/
 
 		assert(queue->cur_size != 0);
-		assert(queue->head.next != NULL);
+		assert(queue->head->next != NULL);
 		/*遍历所有成员使time值减一*/
-		user = queue->head.next;
+		user = queue->head->next;
 		/*
 		 * 	此处可以采用一种整体删除和整体插入的方式优化设计
 		 * 	多用户插入时，如何唤醒多个线程
@@ -88,7 +88,7 @@ void * scan_routine(void *arg)
 			if (user->time <= 0)
 			{/*用户的浏览时间结束*/
 
-				queue->head.next = user->next;/*从队列中删除用户*/
+				queue->head->next = user->next;/*从队列中删除用户*/
 //				printf("当前大小--------->%d\n", queue->cur_size);
 				fflush(stdout);
 				size = queue->cur_size--;
@@ -98,7 +98,7 @@ void * scan_routine(void *arg)
 //				//	print_user(user);
 //				if (size == 0)
 //					break;
-				user = queue->head.next;/*保存下一个扫描用户*/
+				user = queue->head->next;/*保存下一个扫描用户*/
 				continue;
 			}
 			user = user->next;/*指向下一个用户*/

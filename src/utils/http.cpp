@@ -4,7 +4,7 @@
  *  Created on: Oct 19, 2014
  *      Author: tangzhihua
  */
-#include ”error.h“
+#include "../lib/error.h"
 #include "http.h"
 #include "../types.h"
 #include "text.h"
@@ -13,7 +13,7 @@
 static int http_parse_startline(http_parser* parser);
 static int http_parse_header(http_parser* parser);
 static void print_parser(http_parser *parser);
-//static int http_parse_header30x(http_parser *parser);
+static int http_parse_header30x(http_parser *parser);
 /*
  * http_request_message 函数 用于构造http请求消息
  * 参数：
@@ -68,7 +68,7 @@ void init_http_parser(http_parser *parser, char *buffer) {
 	parser->content_length = -1;
 	parser->chunk_size = -1;
 	parser->state = ANSWER;
-	parser->h_com.parse_enter = (void *)enter_http_parser;
+	parser->h_com.parse_enter = (int (*)(void *, int))enter_http_parser; //添加函数指针的强制类型转换 by huxi 9.20
 }
 /*
  * http_parser_enter() http解析器的入口
@@ -320,27 +320,30 @@ static void print_parser(http_parser *parser) {
  * 		1-->出错
  * 	注：尚未实现
  */
-static int http_parse_header30x(http_parser *parser) {
+static int http_parse_header30x(http_parser *parser1) {
+    
+    parser_t parser=parser1->h_com;
 
-	if (parser->h_com.posParse - parser->area < 2) {
+	if (parser.posParse - parser.area < 2) {
 		// end of http headers without location => err40X
 		errno = err40X;
 		return 1;
 	} else {
-		if (is_startWithIgnoreCase("location: ", parser->area)) {
+		if (is_startWithIgnoreCase("location: ", parser.area)) {
+            char *area=parser.area;
 			int i = 10;
 			while (area[i] != ' ' && area[i] != '\n' && area[i] != '\r') {
 				i++;
 			}
+            /**
 			if (notCgiChar(area[i])) {
 				area[i] = 0; // end of url
 				// read the location (do not decrease depth)
-				url *nouv = new
-				url(area + 10, here->getDepth(), base);
+				url *nouv = new url(area + 10, here->getDepth(), base);
 
 				manageUrl(nouv, true);
 				// we do not need more headers
-			}
+			}**/  //do what thing??
 			errno = err30X;
 			return 1;
 		}

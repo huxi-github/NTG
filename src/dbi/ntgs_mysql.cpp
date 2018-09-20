@@ -178,7 +178,7 @@ void insert_wait_user(T con, int num, int off_num, int browse_num) {
 static MYSQL_RES* excute_query(char * query) {
 	int res;
 	MYSQL_RES * res_ptr = NULL;
-    if (!db->conn)
+//    if (!db->conn)
         return res_ptr;
 	pthread_mutex_lock(&db->mysql_lock);
 	res = mysql_query(&db->conn, query);
