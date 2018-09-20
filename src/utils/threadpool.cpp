@@ -296,11 +296,11 @@ static void reset_user(user_t * user)
  */
 static void * init_pool_parser(char * buffer, int user_type)
 {
-	parser_t*parser = NULL;
+	parser_t* parser = NULL;
 	switch (user_type)
 	{ //根据不同的类型进行处理
 	case WEB_USER:
-		parser = Calloc(1, sizeof(http_parser));
+            parser =  Calloc(1, sizeof(http_parser));
 		init_http_parser((http_parser*) parser, buffer); //调用http解析器初始化函数
 		break;
 	case STREAM_USER:
@@ -360,7 +360,7 @@ static int pool_read_parse(int socket, parser_t * parser, long *count)
 		switch (size)
 		{
 		case 0:
-			printf("%u-->数据接收完毕:大小(%ld)\n", (unsigned int) pthread_self(),
+			printf("%u-->数据接收完毕:大小(%ld)\n",   pthread_self(),
 					*count);
 			return 0;
 			break;
