@@ -6,6 +6,30 @@
  */
 #include "url.h"
 #include <stdlib.h>
+
+
+
+char * url_to_str(url_t *url){
+    char* urlStr=NULL;
+    
+    if(url==NULL){
+        return NULL;
+    }
+    char portstr[4];
+    sprintf(portstr, "%d",url->port);
+    
+    size_t str_len=strlen(url->host)+
+//    strlen(portstr)+
+    strlen(url->pre_path)+strlen(url->file);
+    
+    urlStr=new char[str_len];
+    
+    strcpy(urlStr, url->host);
+//    strcat(urlStr, portstr);
+    strcat(urlStr, url->pre_path);
+    strcat(urlStr, url->file);
+    return urlStr;
+}
 /*
  * paser_url函数
  * 		解析url为host、port和file三部分
@@ -38,7 +62,7 @@ url_t* paser_url(const char * str_url, int str_len)
 	}
 
 	char *p = ptr;
-	url = Calloc(1, sizeof(url_t));
+	url = (url_t*)Calloc(1, sizeof(url_t));
 
 	i = 0;
 	while (i < len)
@@ -48,7 +72,7 @@ url_t* paser_url(const char * str_url, int str_len)
 		case ':':
 			if (url->host == NULL)
 			{ //先发现了':'
-				url->host = Calloc(i + 1, sizeof(char));
+				url->host = (char *)Calloc(i + 1, sizeof(char));
 				strncpy(url->host, ptr, i);
 				url->host[i + 1] = '\0';
 			}
@@ -62,11 +86,11 @@ url_t* paser_url(const char * str_url, int str_len)
 		case '/':
 			if (url->host == NULL)
 			{ //先发现了'/'
-				url->host = Calloc(i + 1, sizeof(char));
+				url->host = (char *)Calloc(i + 1, sizeof(char));
 				strncpy(url->host, ptr, i);
 				url->host[i] = '\0';
 			}
-			url->file = Calloc(len - i + 1, sizeof(char));
+			url->file = (char *)Calloc(len - i + 1, sizeof(char));
 			strncpy(url->file, p + i, len - i);
 			url->file[len - i] = '\0';
 			i = len;
@@ -79,7 +103,7 @@ url_t* paser_url(const char * str_url, int str_len)
 	/*以下为无port和file的情况，如“www.baidu.com”*/
 	if (url->host == NULL)
 	{
-		url->host = Calloc(len + 1, sizeof(char));
+		url->host = (char *)Calloc(len + 1, sizeof(char));
 		strncpy(url->host, ptr, len);
 		url->host[len] = '\0';
 	}
@@ -89,7 +113,7 @@ url_t* paser_url(const char * str_url, int str_len)
 	}
 	if (url->file == NULL)
 	{
-		url->file = Calloc(2, sizeof(char));
+		url->file = (char *)Calloc(2, sizeof(char));
 		strcpy(url->file, "/");
 		url->file[1] = '\0';
 	}
@@ -107,7 +131,7 @@ url_t* paser_url(const char * str_url, int str_len)
 		}
 		s++;
 	}
-	url->pre_path = Calloc(strlen(url->file) + 1, sizeof(char));
+	url->pre_path = (char *)Calloc(strlen(url->file) + 1, sizeof(char));
 	strncpy(url->pre_path, url->file, flag - url->file + 1);
 	url->pre_path[flag - url->file + 1] = '\0';
 
@@ -133,7 +157,7 @@ void setfileofurl(url_t* url, const char *file)
 		free(url->file);
 	}
 	len = strlen(file) + strlen(url->pre_path);
-	url->file = Calloc(len + 1, sizeof(char));
+	url->file = (char *)Calloc(len + 1, sizeof(char));
 	strcpy(url->file, url->pre_path);
 	strcat(url->file, file);
 	url->file[len] = '\0';

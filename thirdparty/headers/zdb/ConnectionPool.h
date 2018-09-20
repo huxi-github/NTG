@@ -248,7 +248,7 @@
 
 
 #define T ConnectionPool_T
-typedef struct ConnectionPool_S *T;
+typedef struct ConnectionPool_S * T;
 
 /**
  * Library Debug flag. If set to true, emit debug output 

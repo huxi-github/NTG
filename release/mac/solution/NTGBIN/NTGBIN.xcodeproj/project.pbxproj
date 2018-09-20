@@ -41,6 +41,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DD1B44062153B69600F5B7F4 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
 		DD71117B2153987100FFB432 /* NTGBIN */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NTGBIN; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD71117E2153987100FFB432 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		DD71118621539AA300FFB432 /* error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = error.cpp; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		DD71118521539AA300FFB432 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				DD1B44062153B69600F5B7F4 /* error.h */,
 				DD71118621539AA300FFB432 /* error.cpp */,
 				DD71118721539AA300FFB432 /* string.cpp */,
 				DD71118821539AA300FFB432 /* string.h */,
@@ -464,8 +466,10 @@
 		DD7111832153987100FFB432 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C4MNR3G2YX;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/headers\"/**";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/libs\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -475,8 +479,10 @@
 		DD7111842153987100FFB432 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C4MNR3G2YX;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/headers\"/**";
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/libs\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";

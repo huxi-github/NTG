@@ -18,7 +18,7 @@ static user_t * get_user_from_wait();
 static void reset_user(user_t * user);
 static void replace_user(user_t *user);
 
-static void* init_pool_parser(char * buffer, int user_type);
+static parser_t* init_pool_parser(char * buffer, int user_type);
 static void free_pool_parser(parser_t* parser);
 static void re_pool_parser(parser_t *parser);
 static int pool_read_parse(int socket, parser_t * parser, long *count);
@@ -33,7 +33,7 @@ void pool_init(int max_thread_num)
 {
 
 	/*为线程池分配内存资源*/
-	pool_queue = calloc(1, sizeof(b_queue));
+	pool_queue = (b_queue*)calloc(1, sizeof(b_queue));
 	/*初始化互斥锁和条件变量*/
 	pthread_mutex_init(&(pool_queue->mutex), NULL);
 	pthread_cond_init(&(pool_queue->ready), NULL);
@@ -125,14 +125,14 @@ static void* thread_routine(void *arg)
 		}
 		con = ConnectionPool_getConnection(pool);
 		if (con == NULL)
-			goto e_con;
+            {goto e_con;}
 		page = get_page(con, user->page_id);
 		if (page == NULL)
-			goto e_page;
+            {goto e_page;}
 		strcpy(user->url, page->url->host);
 		strcat(user->url, page->url->pre_path);
 
-		int sh = 0;
+		int sh ;  //不要初始化，参看链接https://stackoverflow.com/questions/14274225/statement-goto-can-not-cross-variable-definition
 
 		if (gettimeofday(&tstart, NULL) == -1)
 		{
@@ -188,10 +188,10 @@ static void* thread_routine(void *arg)
 		{
 			fprintf(stderr, "Failed to get end time\n");
 		}
-		long usec = (tend.tv_sec - tstart.tv_sec) * 1000000
-				+ (tend.tv_usec - tstart.tv_usec);
-		printf("%s%s---------------->time-----------%ld(ms)\n", //
-				page->url->host, page->url->pre_path, usec / 1000);
+//        long usec = (tend.tv_sec - tstart.tv_sec) * 1000000
+//                + (tend.tv_usec - tstart.tv_usec);
+//        printf("%s%s---------------->time-----------%ld(ms)\n", //
+//                page->url->host, page->url->pre_path, usec / 1000);
 		fflush(stdout);
 		insert_log(con, user, &tstart, &tend, count);
 		printf("完成..................\n");
@@ -199,12 +199,15 @@ static void* thread_routine(void *arg)
 		/*清理和释放资源*/
 		//		bzero(buff, MESSAGE_SIZE);
 		//		bzero(msg, MESSAGE_SIZE);
-		e_parse: Close(sockfd);
-		sockfd = -1;
-		e_sock_con: free_page(page);
-		e_page: Connection_close(con);
-		e_con: free_pool_parser(parser);
-		e_parser: replace_user(user);		//重置用户
+        {
+        e_parse:Close(sockfd);
+        sockfd = -1;
+        e_sock_con: free_page(page);
+        e_page: Connection_close(con);
+        e_con: free_pool_parser(parser);
+        e_parser: replace_user(user);		//重置用户
+        }
+        
 	}
 	/*这一句应该是不可达的*/
 	pthread_exit(NULL);
@@ -294,13 +297,13 @@ static void reset_user(user_t * user)
  * 		user_type -->用户类型
  * 	返回：parser的指针
  */
-static void * init_pool_parser(char * buffer, int user_type)
+static parser_t * init_pool_parser(char * buffer, int user_type)
 {
 	parser_t* parser = NULL;
 	switch (user_type)
 	{ //根据不同的类型进行处理
 	case WEB_USER:
-            parser =  Calloc(1, sizeof(http_parser));
+            parser =  (parser_t*)Calloc(1, sizeof(http_parser));  //强制转换  by huxi 2019.9.20
 		init_http_parser((http_parser*) parser, buffer); //调用http解析器初始化函数
 		break;
 	case STREAM_USER:
@@ -349,7 +352,7 @@ static void re_pool_parser(parser_t *parser)
 static int pool_read_parse(int socket, parser_t * parser, long *count)
 {
 //	uint64_t count = 0; //统计接收的数据
-	uint32_t rst, size;
+	int32_t rst, size;
 	for (;;)
 	{
 		int p = parser->pos;

@@ -19,8 +19,8 @@ struct database_pool{
 	Connection_T con;
 };
 
-#define T database_pool_p
-typedef struct database_pool* T;
+//#define T database_pool_p
+//typedef struct database_pool* T;
 
 typedef struct mysql_conn_st {
 	MYSQL conn;
@@ -28,6 +28,8 @@ typedef struct mysql_conn_st {
 	pthread_mutex_t mysql_lock;
 	pthread_cond_t mysql_cond;
 }mysql_t;
+
+extern mysql_t* db;  //cpp 定义？？？
 
 typedef struct page_st {
 	url_t* url;/*页面的url*/

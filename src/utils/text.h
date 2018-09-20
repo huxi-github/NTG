@@ -5,7 +5,7 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include "utils/string.h"
+#include "gstring.h"
 
 char lowerCase (char a);
 

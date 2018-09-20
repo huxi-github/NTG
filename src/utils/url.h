@@ -23,5 +23,6 @@ struct url
 };
 extern void setfileofurl(url_t* url, const char *file);
 extern url_t* paser_url(const char * str_url, int str_len);
+extern char * url_to_str(url_t *url);
 extern void free_url(url_t *url);
 #endif /* URL_H_ */

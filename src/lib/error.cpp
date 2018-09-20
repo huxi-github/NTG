@@ -1,9 +1,10 @@
 #include	"unp.h"
-# include	<mqueue.h>
+//# include    <mqueue.h>
 #include	<stdarg.h>		/* ANSI C header file */
 #include	<syslog.h>		/* for syslog() */
+#include    "error.h"
 
-int		daemon_proc;		/* set nonzero by daemon_init() */
+//daemon_proc=        /* set nonzero by daemon_init() */
 
 static void	err_doit(int, int, const char *, va_list);
 

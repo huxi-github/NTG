@@ -12,7 +12,7 @@
 #include "types.h"
 static void print_a_property(a_queue * queue);
 void * signal_thread(void *arg);
-sigset_t ma;
+sigset_t mask;
 
 int ain(int ar, char ** argv)
 {
@@ -76,8 +76,8 @@ int ain(int ar, char ** argv)
 //	pool_init(MAX_THREAD_NUM);
 	//print_a_property(offline_queque);
 	//print_a_property(browse_queue);
-	pthread_t *a = calloc(1, sizeof(pthread_t));
-	pthread_t *b = calloc(1, sizeof(pthread_t));
+	pthread_t *a = (pthread_t*)calloc(1, sizeof(pthread_t));
+	pthread_t *b = (pthread_t*)calloc(1, sizeof(pthread_t));
 	pthread_create(a, NULL, scan_routine, offline_queue);
 	pthread_create(b, NULL, scan_routine, browse_queue);
 
@@ -140,7 +140,7 @@ void * signal_thread(void *arg)
 
 void print_a_property(a_queue * queue)
 {
-	printf("%u,\t%d,\t%d, \t%d, \t%d\n", (unsigned int) queue->head.next,
+    printf("usrId:%u,\t%d,\t%d, \t%d, \t%d\n", queue->head->next->id,
 			queue->cycle, queue->temp_value, queue->shutdown, queue->cur_size);
 	return;
 }
