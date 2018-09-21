@@ -39,8 +39,10 @@ typedef struct page_st {
 extern void insert_wait_user(Connection_T con, int num, int off_num , int browse_num);
 extern void insert_user(Connection_T con, int num );
 extern void insert_log(Connection_T con,  void *user, struct timeval *tstart,struct timeval *tend, long count);
+
 extern ConnectionPool_T init_connection_pool(const char *url_str);
 extern void free_connection_pool(ConnectionPool_T pool);
+
 extern page_t * get_page(Connection_T con, int index);
 extern void free_page(page_t * page);
 

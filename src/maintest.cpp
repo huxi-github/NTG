@@ -22,13 +22,13 @@ int main2(int argc, char **argv) {
 	page_t* page;
 	pool = init_connection_pool("mysql://localhost/urldb?user=root&password=123456");
 	Connection_T con = ConnectionPool_getConnection(pool);
-	page =  get_page( con, 2);
+	page =  get_page(con, 2);
 	printf("url = %s\n", page->url->file);
 	while(ResultSet_next(page->result_set)){
 		printf("%s\n", ResultSet_getString(page->result_set, 1));
 	}
 
-	Connection_execute(con,"insert into log_t value(null, '%d','%d','%s','%d.%d','%d')",
+	Connection_execute(con,"insert into log_t value(null, '%d','%d','%s','%d.%d','%d')",  //log_t 表
 				2, 23, "hongyan.cqupt.edu.cn/web/", 12 , 24, 1023);
 
 
@@ -84,34 +84,35 @@ int main2(int argc, char **argv) {
 
 
 	/*测试1*/
-	//	url_t *url;
-	//	int size;
-	//	int rcv_len;
-	//	int sockfd;
-	//	char *str_urls = "http://hongyan.cqupt.edu.cn/web/,"
-	//				"admin/upload/pictures/thumbnail_1300252276_0.jpg,"
-	//				"admin/upload/pictures/thumbnail_1288163191_0.jpg,"
-	//				"admin/upload/pictures/thumbnail_1289192278_0.jpg,"
-	//				"admin/upload/pictures/thumbnail_1286288717_0.jpg,"
-	//				"admin/upload/pictures/thumbnail_1286288818_0.jpg,"
-	//				"admin/upload/pictures/thumbnail_1286288839_0.jpg,"
-	//				"admin/upload/pictures/thumbnail_1286288862_0.jpg,";
-	//
-	//	url = paser_url(str_urls,strlen("http://hongyan.cqupt.edu.cn/web/"));
-	//	char msg[MESSAGE_SIZE];
-	//	char buf[1024];
-	//	size = http_request_message(msg, MESSAGE_SIZE, HTTP_GET, url, 1);
-	//	sockfd = web_builed(url->host);
-	//	printf("socket--->%d\n",sockfd);
-	//	Write(sockfd, msg, size);
-	//	printf("message:\n%s",msg);
-	//	printf("start receive \n");
-	//	while ((rcv_len = read(sockfd, buf, 1024))!=0){
-	//		buf[rcv_len] = '\0';
-	//		printf("%s",buf);
-	//	}
+        url_t *url;
+        int size;
+        int rcv_len;
+        int sockfd;
+        char *str_urls = "http://hongyan.cqupt.edu.cn/web/,"
+                    "admin/upload/pictures/thumbnail_1300252276_0.jpg,"
+                    "admin/upload/pictures/thumbnail_1288163191_0.jpg,"
+                    "admin/upload/pictures/thumbnail_1289192278_0.jpg,"
+                    "admin/upload/pictures/thumbnail_1286288717_0.jpg,"
+                    "admin/upload/pictures/thumbnail_1286288818_0.jpg,"
+                    "admin/upload/pictures/thumbnail_1286288839_0.jpg,"
+                    "admin/upload/pictures/thumbnail_1286288862_0.jpg,"
+    ;
+    
+        url = paser_url(str_urls,strlen("http://hongyan.cqupt.edu.cn/web/"));
+        char msg[MESSAGE_SIZE];
+        char buf[1024];
+        size = http_request_message(msg, MESSAGE_SIZE, HTTP_GET, url, 1);
+        sockfd = web_builed(url->host);
+        printf("socket--->%d\n",sockfd);
+        Write(sockfd, msg, size);
+        printf("message:\n%s",msg);
+        printf("start receive \n");
+        while ((rcv_len = read(sockfd, buf, 1024))!=0){
+            buf[rcv_len] = '\0';
+            printf("%s",buf);
+        }
 
 
-	//	printf("host = %s; port = %d; file = %s", url->host, url->port, url->file);
+        printf("host = %s; port = %d; file = %s", url->host, url->port, url->file);
 	return 0;
 }

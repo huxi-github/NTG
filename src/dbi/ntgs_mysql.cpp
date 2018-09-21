@@ -14,17 +14,17 @@
 #include "url.h"
 //MYSQL_RES *res_ptr;
 //MYSQL_ROW sqlrow;
-#define T Connection_T
+#define Con_T Connection_T
 
 //static MYSQL_RES* excute_query(char * query);
 
-static int get_page_id(T con, char * url);
+static int get_page_id(Connection_T con, char * url);
 
 
 /*
  * get_page_id 获取指定url的页面id
  */
-static int get_page_id(T con, url_t * url) {
+static int get_page_id(Connection_T con, url_t * url) {
     int p_id = -1;
     ResultSet_T rst;
     char *urlstr=url_to_str(url);
@@ -52,32 +52,32 @@ void free_connection_pool(ConnectionPool_T pool) {
 	URL_free(&url);
 }
 
-int add_page(T con, page_t * page) {
+int add_page(Connection_T con, page_t * page) {
         int res, id = -1;
         ResultSet_T rst;
 
-        id = get_page_id(con, page->url);
+        id = get_page_id(con, page->url);  //是否已经存在
         if (id > 0)
             return id;
         Connection_execute(con, "insert  into page_t value(null, '%s')",page->url);
-        id = get_page_id(con, page->url);
     /*
      * 如果resource不为空，添加到数据库
      */
     return 0;
 }
 
-page_t * get_page(T con, int index) {
+page_t * get_page(Connection_T con, int index) {
 	page_t* page = NULL;
 	ResultSet_T rst;
 	page = (page_t*)Calloc(1, sizeof(page_t));
 
-	rst = Connection_executeQuery(con, "select url from page_t where id = '%d'",
+	rst = Connection_executeQuery(con, "select url from page_t where id = '%d'",  //page_t 表
 			index);
 	if (!ResultSet_next(rst))
 		goto e_result_set;
 	page->url = paser_url(ResultSet_getString(rst, 1),
 			ResultSet_getColumnSize(rst, 1));
+    
 	page->result_set = Connection_executeQuery(con,
 			"select file_path from resource_t where page_id = '%d'", index);
 	return page;
@@ -92,7 +92,7 @@ void free_page(page_t * page) {
 	free(page);
 }
 
-void insert_log(T con, void*u, struct timeval *tstart, struct timeval *tend,
+void insert_log(Connection_T con, void*u, struct timeval *tstart, struct timeval *tend,
 		long count) {
 	long usec;
 	user_t* user;
@@ -105,12 +105,12 @@ void insert_log(T con, void*u, struct timeval *tstart, struct timeval *tend,
 			count / 1024);
 }
 
-void insert_user(T con, int num) {
+void insert_user(Connection_T con, int num) {
 	Connection_execute(con,
 			"insert into offusers_t value(null, '%d',UNIX_TIMESTAMP())", num);
 }
 
-void insert_wait_user(T con, int num, int off_num, int browse_num) {
+void insert_wait_user(Connection_T con, int num, int off_num, int browse_num) {
 	Connection_execute(con,
 			"insert into users_t value(null, '%d', '%d', '%d', '%d',UNIX_TIMESTAMP())",
 			num, off_num, num - off_num, num - off_num - browse_num);
@@ -156,11 +156,11 @@ void insert_wait_user(T con, int num, int off_num, int browse_num) {
 //    char qs[384];
 //    char es[256];
 //
-////    con=init_connection_pool(<#const char *url_str#>)
+//    con=init_connection_pool(<#const char *url_str#>)
 //    id = get_page_id(con,page->url);
 //    if (id > 0)
 //        return id;
-//    mysql_real_escape_string(&db->conn, es, page->url, strlen(url_to_str(page->url)));
+////    mysql_real_escape_string(&db->conn, es, page->url, strlen(url_to_str(page->url)));
 //    sprintf(qs, "insert  into page_t value(null, '%s')", es);
 //    res = mysql_query(&db->conn, qs);
 //    if(res) return id;
@@ -174,7 +174,7 @@ void insert_wait_user(T con, int num, int off_num, int browse_num) {
 //int delete_page_of_url(char *url);
 //int get_page(page_t* page);
 
-
+/**  //不用zdb 直接连接
 static MYSQL_RES* excute_query(char * query) {
 	int res;
 	MYSQL_RES * res_ptr = NULL;
@@ -205,6 +205,7 @@ static int excute_update(char *update) {
 
 	return rows;
 }
+ **/
 
 //int add_resource(int page_id, char *rs_path);
 //int delete_resource(char *rs_path);

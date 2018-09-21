@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD1B44082153D83300F5B7F4 /* libmysqlclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD1B44072153D83300F5B7F4 /* libmysqlclient.a */; };
+		DD1B440E2153D9D100F5B7F4 /* libzdb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD1B440D2153D9D000F5B7F4 /* libzdb.a */; };
 		DD71117F2153987100FFB432 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD71117E2153987100FFB432 /* main.cpp */; };
 		DD7111A621539AA400FFB432 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD71118621539AA300FFB432 /* error.cpp */; };
 		DD7111A721539AA400FFB432 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD71118721539AA300FFB432 /* string.cpp */; };
@@ -25,7 +27,6 @@
 		DD7111B421539AA400FFB432 /* threadpool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD71119F21539AA300FFB432 /* threadpool.cpp */; };
 		DD7111B521539AA400FFB432 /* url.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD7111A121539AA300FFB432 /* url.cpp */; };
 		DD7111B621539AA400FFB432 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD7111A521539AA400FFB432 /* main.cpp */; };
-		DD7111D421539BE800FFB432 /* libzdb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD7111B821539BE700FFB432 /* libzdb.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +43,8 @@
 
 /* Begin PBXFileReference section */
 		DD1B44062153B69600F5B7F4 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
+		DD1B44072153D83300F5B7F4 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = ../../../../../usr/local/Cellar/mysql/8.0.12/lib/libmysqlclient.a; sourceTree = "<group>"; };
+		DD1B440D2153D9D000F5B7F4 /* libzdb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzdb.a; sourceTree = "<group>"; };
 		DD71117B2153987100FFB432 /* NTGBIN */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NTGBIN; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD71117E2153987100FFB432 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		DD71118621539AA300FFB432 /* error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = error.cpp; sourceTree = "<group>"; };
@@ -72,7 +75,6 @@
 		DD7111A321539AA300FFB432 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = types.h; path = ../../../../../src/types.h; sourceTree = "<group>"; };
 		DD7111A421539AA300FFB432 /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = global.h; path = ../../../../../src/global.h; sourceTree = "<group>"; };
 		DD7111A521539AA400FFB432 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../../../src/main.cpp; sourceTree = "<group>"; };
-		DD7111B821539BE700FFB432 /* libzdb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzdb.a; sourceTree = "<group>"; };
 		DD7111BB21539BE800FFB432 /* binary_log_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = binary_log_types.h; sourceTree = "<group>"; };
 		DD7111BC21539BE800FFB432 /* errmsg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errmsg.h; sourceTree = "<group>"; };
 		DD7111BD21539BE800FFB432 /* my_command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = my_command.h; sourceTree = "<group>"; };
@@ -103,13 +105,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD7111D421539BE800FFB432 /* libzdb.a in Frameworks */,
+				DD1B440E2153D9D100F5B7F4 /* libzdb.a in Frameworks */,
+				DD1B44082153D83300F5B7F4 /* libmysqlclient.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DD1B440B2153D99E00F5B7F4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DD7111722153987100FFB432 = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +127,7 @@
 				DD71117D2153987100FFB432 /* NTGBIN */,
 				DD71117C2153987100FFB432 /* Products */,
 				DD7111B721539BE700FFB432 /* libs */,
+				DD1B440B2153D99E00F5B7F4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -213,7 +224,8 @@
 		DD7111B721539BE700FFB432 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				DD7111B821539BE700FFB432 /* libzdb.a */,
+				DD1B440D2153D9D000F5B7F4 /* libzdb.a */,
+				DD1B44072153D83300F5B7F4 /* libmysqlclient.a */,
 			);
 			name = libs;
 			path = ../../../../thirdparty/libs;
@@ -471,7 +483,10 @@
 				DEVELOPMENT_TEAM = C4MNR3G2YX;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/headers\"/**";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/libs\"";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../../../thirdparty/libs\"/**",
+					"/usr/local/Cellar/mysql/8.0.12/lib/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -484,7 +499,10 @@
 				DEVELOPMENT_TEAM = C4MNR3G2YX;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/headers\"/**";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/libs\"";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../../../thirdparty/libs\"/**",
+					"/usr/local/Cellar/mysql/8.0.12/lib/**",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
