@@ -12,6 +12,13 @@
 // * 用户数
 // */
 int user_num = 1000;
+//数据库连接池 的实现
+ConnectionPool_T pool=NULL;
+ConnectionPool_T log_pool=NULL;
+
+  a_queue *offline_queue=NULL;/*离线队列*/
+  a_queue *browse_queue=NULL;/*浏览队列*/
+  b_queue *pool_queue=NULL;/*线程池队列*/
 
 static void aq_init(a_queue * aq, int type, int cycle);
 static user_t * search_insert_point(user_t * head, user_t * end, int value);

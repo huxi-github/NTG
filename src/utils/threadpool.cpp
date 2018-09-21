@@ -151,9 +151,8 @@ static void* thread_routine(void *arg)
 			fflush(stdout);
 			if (parser->isconnect)
 			{
-				//				if(sockfd > 0)
-				//					Close(sockfd);
-				if (sockfd > 0)
+                
+				if (sockfd > 0)  //检查该sockfd是否，没有被释放的 描述符
 				{
 					Close(sockfd);
 					sockfd = -1;

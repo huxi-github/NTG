@@ -21,10 +21,10 @@
 extern int user_num;
 
 /*
- * 数据库
+ * 数据库 连接池
  */
-ConnectionPool_T pool;
-ConnectionPool_T log_pool;
+extern ConnectionPool_T pool;
+extern ConnectionPool_T log_pool;
 
 /*
  * 用户的抽象
@@ -91,9 +91,9 @@ typedef struct
 } b_queue;
 
 /*定义全局队列指针*/
-a_queue *offline_queue;/*离线队列*/
-a_queue *browse_queue;/*浏览队列*/
-b_queue *pool_queue;/*线程池队列*/
+extern a_queue *offline_queue;/*离线队列*/
+extern a_queue *browse_queue;/*浏览队列*/
+extern b_queue *pool_queue;/*线程池队列*/
 
 /*统计结构*/
 //struct statistics{

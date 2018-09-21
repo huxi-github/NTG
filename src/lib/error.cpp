@@ -3,7 +3,7 @@
 #include	<syslog.h>		/* for syslog() */
 #include    "error.h"
 
-//daemon_proc=        /* set nonzero by daemon_init() */
+int daemon_proc=-1;        /* set nonzero by daemon_init() */
 
 static void	err_doit(int, int, const char *,  va_list ap);
 

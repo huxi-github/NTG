@@ -39,11 +39,11 @@ static int get_page_id(Connection_T con, url_t * url) {
 }
 
 ConnectionPool_T init_connection_pool(const char *url_str) {
-	ConnectionPool_T pool = NULL;
+	ConnectionPool_T pool1 = NULL;
 	URL_T url = URL_new(url_str);
-	pool = ConnectionPool_new(url); //新建一个连接池结构体，并分配内存
-	ConnectionPool_start(pool);
-	return pool;
+	pool1 = ConnectionPool_new(url); //新建一个连接池结构体，并分配内存
+	ConnectionPool_start(pool1);
+	return pool1;
 }
 
 void free_connection_pool(ConnectionPool_T pool) {

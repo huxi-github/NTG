@@ -18,7 +18,7 @@
 #include <stdio.h>
 int main2(int argc, char **argv) {
 
-	ConnectionPool_T pool;
+//    ConnectionPool_T pool;
 	page_t* page;
 	pool = init_connection_pool("mysql://localhost/urldb?user=root&password=123456");
 	Connection_T con = ConnectionPool_getConnection(pool);

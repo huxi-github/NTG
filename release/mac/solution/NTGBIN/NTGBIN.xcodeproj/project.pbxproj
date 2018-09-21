@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DD1B44082153D83300F5B7F4 /* libmysqlclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD1B44072153D83300F5B7F4 /* libmysqlclient.a */; };
 		DD1B440E2153D9D100F5B7F4 /* libzdb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD1B440D2153D9D000F5B7F4 /* libzdb.a */; };
+		DD29AB1D215526D600A2CE46 /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DD29AB1C215526D600A2CE46 /* libsqlite3.a */; };
 		DD71117F2153987100FFB432 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD71117E2153987100FFB432 /* main.cpp */; };
 		DD7111A621539AA400FFB432 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD71118621539AA300FFB432 /* error.cpp */; };
 		DD7111A721539AA400FFB432 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD71118721539AA300FFB432 /* string.cpp */; };
@@ -45,6 +46,7 @@
 		DD1B44062153B69600F5B7F4 /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
 		DD1B44072153D83300F5B7F4 /* libmysqlclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmysqlclient.a; path = ../../../../../usr/local/Cellar/mysql/8.0.12/lib/libmysqlclient.a; sourceTree = "<group>"; };
 		DD1B440D2153D9D000F5B7F4 /* libzdb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzdb.a; sourceTree = "<group>"; };
+		DD29AB1C215526D600A2CE46 /* libsqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsqlite3.a; sourceTree = "<group>"; };
 		DD71117B2153987100FFB432 /* NTGBIN */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NTGBIN; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD71117E2153987100FFB432 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		DD71118621539AA300FFB432 /* error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = error.cpp; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD29AB1D215526D600A2CE46 /* libsqlite3.a in Frameworks */,
 				DD1B440E2153D9D100F5B7F4 /* libzdb.a in Frameworks */,
 				DD1B44082153D83300F5B7F4 /* libmysqlclient.a in Frameworks */,
 			);
@@ -224,6 +227,7 @@
 		DD7111B721539BE700FFB432 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				DD29AB1C215526D600A2CE46 /* libsqlite3.a */,
 				DD1B440D2153D9D000F5B7F4 /* libzdb.a */,
 				DD1B44072153D83300F5B7F4 /* libmysqlclient.a */,
 			);
