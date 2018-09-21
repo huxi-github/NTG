@@ -88,7 +88,7 @@ int main2(int argc, char **argv) {
         int size;
         int rcv_len;
         int sockfd;
-        char *str_urls = "http://hongyan.cqupt.edu.cn/web/,"
+        char const *str_urls = "http://hongyan.cqupt.edu.cn/web/,"
                     "admin/upload/pictures/thumbnail_1300252276_0.jpg,"
                     "admin/upload/pictures/thumbnail_1288163191_0.jpg,"
                     "admin/upload/pictures/thumbnail_1289192278_0.jpg,"

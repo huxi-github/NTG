@@ -60,7 +60,7 @@ int is_startWith(char *a, char *b)
  *test if b starts with a ignoring case
  *注：该函数是以小写为比较基础
  */
-int is_startWithIgnoreCase(char *amin, char *b)
+int is_startWithIgnoreCase(char const *amin, char *b)
 {
 	int i = 0;
 	while (amin[i] != 0)

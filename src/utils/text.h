@@ -9,21 +9,21 @@
 
 char lowerCase (char a);
 
-int  startWith (char *a, char *b);
+int  startWith (char const * a, char *b);
 
 int robotsMatch (char *a, char *b);
 
-int is_startWithIgnoreCase(char *amin, char *b);
+int is_startWithIgnoreCase(char const *amin, char *b);
 
-int  endWith (char *a, char *b);
-
-
-int endWithIgnoreCase(char *amin, char *b);
+int  endWith (char const *a, char *b);
 
 
-int  caseContain (char *a, char *b);
+int endWithIgnoreCase(char const *amin, char *b);
 
-char *newString (char *arg);
+
+int  caseContain (char const *a, char *b);
+
+char *newString (char const *arg);
 
 char *readfile (int fds);
 

@@ -27,8 +27,8 @@ static int http_parse_header30x(http_parser *parser);
 
 int http_request_message(char *message, int size, enum http_method method,
 		const url_t *url, int isclose) {
-	char *m;
-	char *http_t = "HTTP/1.1";
+	char const *m;
+	char const *http_t = "HTTP/1.1";
 	int num;
 	/*判断请求的方法*/
 	if (method == HTTP_GET)
@@ -36,12 +36,12 @@ int http_request_message(char *message, int size, enum http_method method,
 	else
 		m = "POST";
 	/*请求消息的不变部分*/
-	char * accept = "User-Agent: Mozilla/5.0\r\n"
+	 char const *  accept = "User-Agent: Mozilla/5.0\r\n"
 		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
 		"Accept-Language: en-us,en;q=0.5\r\n"
 		"Accept-Encoding: gzip,deflate\r\n"
 		"Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n";
-	char * con_close = "Connection: close\r\n";
+	char const * con_close = "Connection: close\r\n";
 	//	/*构造http请求消息*/
 	num = snprintf(message, size, "%s %s %s\r\nHost: %s:%d\r\n%s", m,
 			url->file, http_t, url->host, url->port, accept);
