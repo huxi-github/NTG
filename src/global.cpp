@@ -12,7 +12,7 @@
 // * 用户数
 // */
 int user_num = 1000;
-//数据库连接池 的实现
+//数据库连接池 的 初始化
 ConnectionPool_T pool=NULL;
 ConnectionPool_T log_pool=NULL;
 
