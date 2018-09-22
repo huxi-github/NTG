@@ -50,7 +50,7 @@ struct user_ops
 {
 	int (*builed)(const char * host);/*消息构建函数指针 */
 	void (*request)(int sockfd, char *msg, size_t msg_size); /*请求函数指针*/
-	size_t (*receive)(int sockfd, char *buf, size_t buf_size);/*接收函数指针*/
+	ssize_t (*receive)(int sockfd, char *buf, size_t buf_size);/*接收函数指针*/
 	void (*behavior)(void * user); /*用户行为函数指针*/
 	void * (*error)(void *); /*错误处理函数指针*/
 };

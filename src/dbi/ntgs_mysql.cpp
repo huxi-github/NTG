@@ -11,7 +11,7 @@
 #include "ntgs_mysql.h"
 #include "time.h"
 #include "zdb/Connection.h"
-#include "url.h"
+#include "../utils/url.h"
 //MYSQL_RES *res_ptr;
 //MYSQL_ROW sqlrow;
 #define Con_T Connection_T

@@ -10,13 +10,17 @@
 /*
  * web用户函数操作集
  */
-struct user_ops web_user_ops =
-{
-		.builed = web_builed,
-		.request = NULL,
-		.receive = (size_t (*)(int, char *, size_t))web_receive,
-		.behavior =web_behavior,
-};
+//struct user_ops web_user_ops =
+//{
+//		.builed = web_builed,
+//		.request = NULL,
+//		.receive = (size_t (*)(int, char *, size_t))web_receive,
+//		.behavior =web_behavior,
+//};
+
+// 修改与9.23 2：44 by huxi 保证 编译通过
+struct user_ops web_user_ops ={web_builed,NULL,web_receive,web_behavior}; //等价
+
 /*
  *
  * web_builed() 与远程服务端建立web链接

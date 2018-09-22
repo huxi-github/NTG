@@ -8,7 +8,7 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
-#define MAX_BUFFER 2048//缓存区大小xiao
+#define MAX_BUFFER 2048//缓存区大小
 #define MESSAGE_SIZE 1024//请求消息大小
 
 #define URL_SIZE        1024 		/*URL的长度限制*/
