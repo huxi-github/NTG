@@ -11,12 +11,15 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/time.h>
+#include <ConnectionPool.h>
 #include <pthread.h>
 #include <zdb.h>
 #include "lib/unp.h"
 #include "web/web.h"
+#include <stddef.h>
 #include "types.h"
 #include "dbi/ntgs_mysql.h"
+
 
 extern int user_num;
 
@@ -109,14 +112,14 @@ struct parser_common
 	uint32_t type :15;
 	//重新建立链接标志
 	uint32_t isconnect :1;
-	// buffer中的当前位置
+	// buffer中的 位置  index   【很少使用】
 	uint32_t pos :16;
-	// 指向connextion中的buffer
+	// 指向connextion中的buffer  //相应全文 的头
 	char *buffer;
 	// 解析到的位置
-	char *posParse;
+	char *posParse;  // 解析的一行 的 尾部字符  \n\r之前的那个字符
 	//感兴趣区域
-	char *area;
+	char *area;		// 解析的一行 的第一个字符
 	/*还应该包含一些处理的函数指针*/
 	int (*parse_enter)(void* parser, int size);
 };

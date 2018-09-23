@@ -25,7 +25,7 @@ static int http_parse_header30x(http_parser *parser);
  * 	返回：实际消息的大小
  */
 
-int http_request_message(char *message, int size, enum http_method method,
+int build_http_request_message(char *message, int size, enum http_method method,
 		const url_t *url, int isclose) {
 	char const *m;
 	char const *http_t = "HTTP/1.1";
@@ -60,7 +60,7 @@ int http_request_message(char *message, int size, enum http_method method,
 void init_http_parser(http_parser *parser, char *buffer) {
 	parser->h_com.type = DATA_HTTP;
 	parser->h_com.buffer = buffer;
-	parser->h_com.pos = 0;
+	parser->h_com.pos = 0;// int类型的
 	parser->h_com.posParse = buffer;
 	parser->h_com.area = buffer;
 	parser->h_com.isconnect = 1;
@@ -68,10 +68,10 @@ void init_http_parser(http_parser *parser, char *buffer) {
 	parser->content_length = -1;
 	parser->chunk_size = -1;
 	parser->state = ANSWER;
-	parser->h_com.parse_enter = (int (*)(void *, int))enter_http_parser; //添加函数指针的强制类型转换 by huxi 9.20
-}
+	parser->h_com.parse_enter = (int (*)(void *, int))http_parser_handle; //添加函数指针的强制类型转换 by huxi 9.20
+}              															 // init_http_parser是一个全局的函数指针变量
 /*
- * http_parser_enter() http解析器的入口
+ * http_parser_enter() http解析器的入口 || 函数指针 用于赋值（init_http_parser中）
  * 参数：
  * 		parser-->http解析器指针
  * 		size-->接收的数据大小
@@ -79,9 +79,9 @@ void init_http_parser(http_parser *parser, char *buffer) {
  * 		0 -->继续解析
  * 		1-->解析出错退出
  * 		2-->解析完成
- *
+ *                        解析实际上致谢了 一个 轮廓，对于 就系到的内容只进行了临时打印，没有 建立model  huxi 9.23
  */
-int enter_http_parser(http_parser* parser, int size) {
+int http_parser_handle(http_parser* parser, int size) {
 	if (parser->state == BODY) {/*不对http的内容进行处理*/
 		parser->h_com.pos = 0;
 		return 0;
@@ -90,43 +90,45 @@ int enter_http_parser(http_parser* parser, int size) {
 	parser->h_com.buffer[parser->h_com.pos] = '\0';
 	/*对头部的解析*/
 	char *posn = NULL;
-	while (parser->h_com.posParse < parser->h_com.buffer + parser->h_com.pos)/*本次接收的数据buffer+pos解析结束的位置*/
+	while (parser->h_com.posParse < parser->h_com.buffer + parser->h_com.pos)/*本次接收的数据buffer+pos解析结束的位置  就结束*/
 	{
 //		printf("reading....num....>%d\n", i++);
 		int size;
-//		print_parser(parser);
-		size = parser->h_com.pos - (parser->h_com.area - parser->h_com.buffer);//获取接收到的数据长度
-		if (parser->state == CHUNK && (parser->chunk_size > 0)) {//chunk_size>0说明还有数据
-			if ((parser->chunk_size - size) >= 0) {
-				parser->chunk_size -= size;
-				parser->h_com.pos = 0;
-				parser->h_com.area = parser->h_com.posParse
-						= parser->h_com.buffer;
-				return 0;
-			} else {
-				parser->h_com.area = parser->h_com.posParse
-						= (parser->h_com.area + parser->chunk_size);
-				parser->chunk_size = -1;
-			}
-		}
+		print_parser(parser);
+		size = parser->h_com.pos - (parser->h_com.area - parser->h_com.buffer);//本次循环带解析 的数据长度
+
+//		if (parser->state == CHUNK && (parser->chunk_size > 0)) {//chunk_size>0说明还有数据
+//			if ((parser->chunk_size - size) >= 0) {
+//				parser->chunk_size -= size;
+//				parser->h_com.pos = 0;
+//				parser->h_com.area = parser->h_com.posParse
+//						= parser->h_com.buffer;
+//				return 0;
+//			} else {
+//				parser->h_com.area = parser->h_com.posParse
+//						= (parser->h_com.area + parser->chunk_size);
+//				parser->chunk_size = -1;
+//			}
+//		}
 //		print_parser(parser);
 //		printf("pos ------->%d\n", parser->h_com.pos);
 //		printf("posParse----->%d\n",
 //				parser->h_com.posParse - parser->h_com.buffer);
-		posn = strchr(parser->h_com.posParse, '\n');
+		posn = strchr(parser->h_com.posParse, '\n'); //posn 本次需要解析的部分的  [开始 指针]
 
 		/*********************************************/
-//		if (posn != NULL) {
-//			printf("posn  size---->%d\n", posn - parser->h_com.area);
-//			printf("posn size of posParse---> %d\n",
-//					posn - parser->h_com.posParse);
-//			printf("posn---->%d\n", posn - parser->h_com.buffer);
-//			char buf[1024];
-//			snprintf(buf, (posn - parser->h_com.area) + 1, "%s",
-//					parser->h_com.area);
-//			printf("line1---->%s", buf);
-//		}
-//		printf("pos ---no---->%d\n", parser->h_com.pos);
+		if (posn != NULL) {
+			printf("posn  size---->%d\n", posn - parser->h_com.area);
+			printf("posn size of posParse---> %d\n",
+					posn - parser->h_com.posParse);
+			printf("posn---->%d\n", posn - parser->h_com.buffer);
+			char buf[1024];
+			snprintf(buf, (posn - parser->h_com.area) + 1, "%s",
+					parser->h_com.area);
+			printf("line1---->%s", buf);
+		}//打印posn
+
+		printf("pos ---no---->%d\n", parser->h_com.pos);
 		/********************************/
 		switch (parser->state) {
 		case ANSWER:/*响应*/
@@ -148,7 +150,7 @@ int enter_http_parser(http_parser* parser, int size) {
 				if (http_parse_header(parser)) {/*头域解析*/
 					return 1;
 				}
-				parser->h_com.area = ++parser->h_com.posParse;
+				parser->h_com.area = ++parser->h_com.posParse;  //开始下一次的解析
 			} else {
 				/*判断是否超过最大行*/
 				if (parser->h_com.pos - (parser->h_com.posParse
@@ -168,8 +170,8 @@ int enter_http_parser(http_parser* parser, int size) {
 			//			printf("ischunk------%d\n", parser->ischunk);
 			if (posn != NULL && parser->ischunk) {/*ischunk = 1 说明chunk编码实体还未结束*/
 				parser->h_com.posParse = posn;
-//				printf("area----->%d\n",
-//						parser->h_com.area - parser->h_com.buffer);
+				printf("area----->%d\n",
+						parser->h_com.area - parser->h_com.buffer);
 				int len = gstrhextonum(parser->h_com.area);
 				if (len > 0) {
 					parser->chunk_size = len + 2;/*\r\n*/
@@ -197,10 +199,10 @@ int enter_http_parser(http_parser* parser, int size) {
 				printf("数据前移\n");
 				parser->h_com.pos = gstrbmove(parser->h_com.buffer,
 						parser->h_com.posParse);
-//				printf("gstrbmove-----size=%d\n", parser->h_com.pos);
+				printf("gstrbmove-----size=%d\n", parser->h_com.pos);
 				parser->h_com.posParse = parser->h_com.area
 						= parser->h_com.buffer;
-//				printf("continue-----------\n");
+				printf("continue-----------\n");
 				return 0;
 			}
 			break;

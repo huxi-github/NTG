@@ -101,8 +101,8 @@ int main(int argc, char **argv) {
         url = paser_url(str_urls,strlen("http://hongyan.cqupt.edu.cn/web/")+strlen("admin/upload/pictures/thumbnail_1300252276_0.jpg"));
         char msg[MESSAGE_SIZE];
         char buf[1024];
-        size = http_request_message(msg, MESSAGE_SIZE, HTTP_GET, url, 1);
-        sockfd = web_builed(url->host);
+        size = build_http_request_message(msg, MESSAGE_SIZE, HTTP_GET, url, 1);
+        sockfd = web_initConnection(url->host);  //web_initConnection
         printf("socket--->%d\n",sockfd);
         Write(sockfd, msg, size);
         printf("message:\n%s",msg);

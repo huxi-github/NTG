@@ -54,9 +54,9 @@ struct http_parser
 
 typedef struct http_parser http_parser;
 
-int http_request_message(char *message, int size, enum http_method method,
+int build_http_request_message(char *message, int size, enum http_method method,
 		const url_t *url, int isclose);
 extern void init_http_parser(http_parser *parser, char *buffer);
-extern int enter_http_parser(http_parser* parser, int size);
+extern int http_parser_handle(http_parser* parser, int size);  //申明一个函数实际上市申明一个  函数指针 变量
 
 #endif /* HTTP1_H_ */
