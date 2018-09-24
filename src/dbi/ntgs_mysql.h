@@ -33,7 +33,7 @@ extern mysql_t* db;  //cpp 定义？？？
 
 typedef struct page_st {
 	url_t* url;/*页面的url*/
-	ResultSet_T result_set;/*页面内嵌的资源*/
+	ResultSet_T result_set;/*页面内嵌的资源*/  //命名为 filename resultSet更好
 }page_t;
 
 extern void insert_wait_user(Connection_T con, int num, int off_num , int browse_num);
