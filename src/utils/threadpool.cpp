@@ -145,8 +145,8 @@ static void* thread_routine(void *arg)
 			{ //当是页面的内嵌资源时，需设置url的file
 				//				printf("%s\n",ResultSet_getString(page->result_set, 1));
 				setfileofurl(page->url,
-						ResultSet_getString(page->result_set, 1));
-			}
+						ResultSet_getString(page->result_set, 1));  // 循环设置 file 文件 //每次请求 file不同
+			}                                                   // 一个 完整的URL 设置完毕
 
 			fflush(stdout);
 			if (parser->isconnect)
@@ -174,7 +174,7 @@ static void* thread_routine(void *arg)
 			/*Write的容错有待处理*/
 			Write(sockfd, msg, size); //发送请求
 
-			if (pool_read_parse(sockfd, parser, &count))
+			if (pool_read_parse(sockfd, parser, &count)) //解析并打印
 			{
 				printf("error1>> %s%s\n", page->url->host, page->url->file);
 				printf("%s\n", msg);
