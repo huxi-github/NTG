@@ -11,10 +11,10 @@
 #include "../dbi/ntgs_mysql.h"
 
 //static void print_user(user_t *user);
+
 /*
  *scan_routine() 扫描例程
  *参数：arg -> 一个指向a_queue的指针
- *返回：无
  */
 void * scan_routine(void *arg)
 {

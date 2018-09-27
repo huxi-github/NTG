@@ -12,11 +12,6 @@
 #include "../global.h"
 #include "../types.h"
 
-//#define ANSWER 0
-//#define HEADERS 1
-//#define HEADERS30X 2
-//#define HTML 3
-
 enum http_state
 {
 	ANSWER,

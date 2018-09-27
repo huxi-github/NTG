@@ -14,21 +14,17 @@
  */
 //struct user_ops web_user_ops =
 //{
-//		.builed = web_builed,
-//		.request = NULL,
-//		.receive = web_receive,
-//		.behavior =web_behavior,
-//};
+//        .builed = web_initConnection,
+//        .request = NULL,
+//        .receive = web_receive_and_print,
+//        .behavior =web_behavior,
+//};  //写法二
+struct user_ops web_user_ops ={web_initConnection,NULL,web_receive_and_print,web_behavior}; //等价
 
-
-//web 用户 操作集
-struct user_ops web_user_ops ={web_initConnection,NULL,web_receive,web_behavior}; //等价
 /*
- *
- * web_builed() 与远程服务端建立web链接
- * 参数：
- * 		url-->url指针
- *返回：socket套接字
+ * web_initConnection() 与远程服务端建立web链接
+ * 参数：[in]  url-->urlstr
+ * 返回：[out] socket套接字
  */
 
 int web_initConnection(const char * host)
@@ -41,11 +37,9 @@ void web_request(int sockfd, char *msg, size_t msg_size)
 	Write(sockfd, msg, msg_size);
 }
 
-ssize_t web_receive(int sockfd, char *buf, size_t buf_size)
+ssize_t web_receive_and_print(int sockfd, char *buf, size_t buf_size)
 {
 	ssize_t n;
-//	n = Read(sockfd, buf, sizeof(buf));  //错错错-----sizeof(buf)==4 常量啊啊啊
-//	return (n);
 	while ((n = read(sockfd, buf, buf_size)) > 0)
 	{
 		buf[n] = '\0';

@@ -92,7 +92,7 @@ int pool_destroy()
 }
 /*
  * thread_routine() 线程例程
- *参数：void类型指针
+ *参数：NULL
  *返回：void类型指针
  */
 static void* thread_routine(void *arg)
@@ -145,7 +145,7 @@ static void* thread_routine(void *arg)
 			{ //当是页面的内嵌资源时，需设置url的file
 				//				printf("%s\n",ResultSet_getString(page->result_set, 1));
 				setfileofurl(page->url,
-						ResultSet_getString(page->result_set, 1));  // 循环设置 file 文件 //每次请求 file不同
+						ResultSet_getString(page->files_result_set, 1));  // 循环设置 file 文件 //每次请求 file不同
 			}                                                   // 一个 完整的URL 设置完毕
 
 			fflush(stdout);
@@ -181,7 +181,7 @@ static void* thread_routine(void *arg)
 				goto e_parse;
 			}
 			re_pool_parser(parser);
-		} while ((sh = ResultSet_next(page->result_set)));
+		} while ((sh = ResultSet_next(page->files_result_set)));
 
 		if (gettimeofday(&tend, NULL) == -1)
 		{
@@ -252,7 +252,7 @@ static user_t * get_user_from_wait()
 	 */
 	while (pool_queue->cur_size == 0 && !pool_queue->shutdown)
 	{
-//		printf("thread 0x%x is waiting\n", (unsigned int) pthread_self());
+//        printf("thread 0x%x is waiting\n",  pthread_self());
 		pthread_cond_wait(&(pool_queue->ready), &(pool_queue->mutex));
 	}
 	/*线程池要销毁了*/

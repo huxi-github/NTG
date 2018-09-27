@@ -29,11 +29,11 @@ typedef struct mysql_conn_st {
 	pthread_cond_t mysql_cond;
 }mysql_t;
 
-extern mysql_t* db;  //cpp 定义？？？
+//extern mysql_t* db;  //cpp 定义？？？
 
-typedef struct page_st {
+typedef struct page_st {  //包含一个网页的url和所有的file文件名
 	url_t* url;/*页面的url*/
-	ResultSet_T result_set;/*页面内嵌的资源*/  //命名为 filename resultSet更好
+	ResultSet_T files_result_set;/*页面内嵌的资源*/
 }page_t;
 
 extern void insert_wait_user(Connection_T con, int num, int off_num , int browse_num);
@@ -43,6 +43,7 @@ extern void insert_log(Connection_T con,  void *user, struct timeval *tstart,str
 extern ConnectionPool_T init_connection_pool(const char *url_str);
 extern void free_connection_pool(ConnectionPool_T pool);
 
+int add_page(Connection_T con, page_t * page);
 extern page_t * get_page(Connection_T con, int index);
 extern void free_page(page_t * page);
 
