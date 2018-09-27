@@ -62,6 +62,6 @@ void web_behavior(void * u)
 	srand((unsigned) time(NULL));     //time(NULL) 以当前时间-为随机数种子
 	user->time = 1 + rand() % UM_TIME;/*生成[1,UM_TIME+1]间的随机数*/
 	user->page_id = 1 + rand() % 27;  /*生成[1,28]间的随机数*/
-	strncpy(user->url, url, strlen(url));
+//    strncpy(user->url, url, strlen(url));
 	snprintf(user->url, URL_SIZE,"%s","http://hongyan.cqupt.edu.cn/web/");  //红岩网校 的 地址（有效的）
 }

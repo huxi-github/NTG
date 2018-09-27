@@ -167,7 +167,7 @@ static void* thread_routine(void *arg)
 			}
 
 			/*构造请求消息*/
-			size = http_request_message(msg, MESSAGE_SIZE, HTTP_GET, page->url,
+            size = build_http_request_message(msg, MESSAGE_SIZE, HTTP_GET, page->url,
 					0);
 			printf("request:----------------->\n%s%s\n", page->url->host,
 					page->url->file);
