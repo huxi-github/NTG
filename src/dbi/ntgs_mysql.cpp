@@ -59,7 +59,7 @@ int add_page(Connection_T con, page_t * page) {
         id = get_page_id(con, page->url);  //是否已经存在
         if (id > 0)
             return id;
-        Connection_execute(con, "insert  into page_t value(null, '%s')",page->url);
+        Connection_execute(con, "insert  into page_t value(null, '%s')",url_to_str(page->url));
     /*
      * 如果resource不为空，添加到数据库
      */

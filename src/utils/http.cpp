@@ -93,7 +93,7 @@ int http_parser_handle(http_parser* parser, int size) {
 	while (parser->h_com.posParse < parser->h_com.buffer + parser->h_com.pos)/*本次接收的数据buffer+pos解析结束的位置  就结束*/
 	{
 //		printf("reading....num....>%d\n", i++);
-		int size;
+		size_t size;
 		print_parser(parser);
 		size = parser->h_com.pos - (parser->h_com.area - parser->h_com.buffer);//本次循环带解析 的数据长度
 
@@ -118,10 +118,10 @@ int http_parser_handle(http_parser* parser, int size) {
 
 		/*********************************************/
 		if (posn != NULL) {
-			printf("posn  size---->%d\n", posn - parser->h_com.area);
-			printf("posn size of posParse---> %d\n",
+			printf("posn  size---->%ld\n", posn - parser->h_com.area);
+			printf("posn size of posParse---> %ld\n",
 					posn - parser->h_com.posParse);
-			printf("posn---->%d\n", posn - parser->h_com.buffer);
+			printf("posn---->%ld\n", posn - parser->h_com.buffer);
 			char buf[1024];
 			snprintf(buf, (posn - parser->h_com.area) + 1, "%s",
 					parser->h_com.area);
@@ -170,7 +170,7 @@ int http_parser_handle(http_parser* parser, int size) {
 			//			printf("ischunk------%d\n", parser->ischunk);
 			if (posn != NULL && parser->ischunk) {/*ischunk = 1 说明chunk编码实体还未结束*/
 				parser->h_com.posParse = posn;
-				printf("area----->%d\n",
+				printf("area----->%ld\n",
 						parser->h_com.area - parser->h_com.buffer);
 				int len = gstrhextonum(parser->h_com.area);
 				if (len > 0) {
@@ -182,7 +182,7 @@ int http_parser_handle(http_parser* parser, int size) {
 				parser->h_com.area = ++parser->h_com.posParse;
 			} else if (posn != NULL) {/*进入trailer解析*/
 				parser->h_com.posParse = posn;
-				size = parser->h_com.posParse - parser->h_com.area;//待解析行的大小
+				size =(int)(parser->h_com.posParse - parser->h_com.area);//待解析行的大小
 				if (size < 2) {/*空行*/
 					//					printf("接收完毕\n");
 					return 2;
@@ -233,7 +233,7 @@ int http_parser_handle(http_parser* parser, int size) {
  * 		1-->出错
  */
 static int http_parse_startline(http_parser* parser) {
-	int len_size;
+	size_t len_size;
 	len_size = parser->h_com.posParse - parser->h_com.area;
 	if (len_size >= 12) {/*判断条件  HTTP/1.1 200 OK \r\n*/
 		switch (parser->h_com.buffer[9]) {/*获取状态码的第一个数*/
@@ -265,7 +265,7 @@ static int http_parse_startline(http_parser* parser) {
  * 注：保证已经得到完整的一行，该函数只对行操作。行的保证由调用者提供
  */
 static int http_parse_header(http_parser* parser) {
-	int size;
+	size_t size;
 	char *p;
 	size_t len;
 	//posParse --> 指向当前行的结尾(换行字符位置)
