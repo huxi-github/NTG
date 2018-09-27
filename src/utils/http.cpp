@@ -79,7 +79,7 @@ void init_http_parser(http_parser *parser, char *buffer) {
  * 		0 -->继续解析
  * 		1-->解析出错退出
  * 		2-->解析完成
- *                        解析实际上致谢了 一个 轮廓，对于 就系到的内容只进行了临时打印，没有 建立model  huxi 9.23
+ *                              对http进行解析并打印（没有建立model）  huxi 9.27
  */
 int http_parser_handle(http_parser* parser, int size) {
 	if (parser->state == BODY) {/*不对http的内容进行处理*/

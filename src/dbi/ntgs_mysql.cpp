@@ -68,7 +68,7 @@ page_t * get_page(Connection_T con, int index) {
 	if (!ResultSet_next(rst))
 		goto e_result_set;
 	page->url = paser_url(ResultSet_getString(rst, 1),
-			ResultSet_getColumnSize(rst, 1));
+			(int)ResultSet_getColumnSize(rst, 1));
     
 	page->files_result_set = Connection_executeQuery(con,
 			"select file_path from resource_t where page_id = '%d'", index);

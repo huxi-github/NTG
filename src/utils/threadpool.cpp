@@ -98,7 +98,7 @@ int pool_destroy()
 static void* thread_routine(void *arg)
 {
 	int size;
-	int sockfd;
+	int sockfd=-1;
 
 	char buff[MAX_BUFFER];
 	char msg[MESSAGE_SIZE];
@@ -113,9 +113,9 @@ static void* thread_routine(void *arg)
 	//	printf("starting thread 0x%x\n", (unsigned int) pthread_self());
 	/*线程例程一直循环*/
 	while (1)
-	{
+    {   int sh=-1;
 		long count = 0;
-		user = get_user_from_wait(); //从等待队列中获取一个用户
+		user = get_user_from_wait(); //从等待队列中Quene_b获取一个用户
 		reset_user(user); //调用用户行为函数
 		/*并没有对出错处理*/
 		parser = init_pool_parser(buff, user->type); //初始化解析器
@@ -132,7 +132,7 @@ static void* thread_routine(void *arg)
 		strcpy(user->url, page->url->host);
 		strcat(user->url, page->url->pre_path);
 
-		int sh ;  //不要初始化，参看链接https://stackoverflow.com/questions/14274225/statement-goto-can-not-cross-variable-definition
+//        int sh ;  //不要初始化，参看链接https://stackoverflow.com/questions/14274225/statement-goto-can-not-cross-variable-definition
 
 		if (gettimeofday(&tstart, NULL) == -1)
 		{
