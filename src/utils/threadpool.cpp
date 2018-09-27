@@ -117,8 +117,8 @@ static void* thread_routine(void *arg)
 		long count = 0;
 		user = get_user_from_wait(); //从等待队列中Quene_b获取一个用户
 		reset_user(user); //调用用户行为函数
-		/*并没有对出错处理*/
-		parser = init_pool_parser(buff, user->type); //初始化解析器
+        int user_type=user->type;
+		parser = init_pool_parser(buff,user_type); //[1]初始化解析器
 		if (parser == NULL)
 		{
 			goto e_parser;
@@ -157,7 +157,7 @@ static void* thread_routine(void *arg)
 					Close(sockfd);
 					sockfd = -1;
 				}
-				sockfd = user->ops->builed(page->url->host); //建立链接
+				sockfd = user->ops->builed(page->url->host); //1.建立链接
 				if (sockfd < 0)
 				{ //失败的日志记录
 					printf("is faile?\n");
@@ -172,12 +172,13 @@ static void* thread_routine(void *arg)
 			printf("request:----------------->\n%s%s\n", page->url->host,
 					page->url->file);
 			/*Write的容错有待处理*/
-			Write(sockfd, msg, size); //发送请求
+//            Write(sockfd, msg, size); //发送请求
+            user->ops->receive(sockfd, msg, size);         //2发送请求
 
-			if (pool_read_parse(sockfd, parser, &count)) //解析并打印
+			if (pool_read_parse(sockfd, parser, &count))   //3.解析并打印
 			{
 				printf("error1>> %s%s\n", page->url->host, page->url->file);
-				printf("%s\n", msg);
+                printf("request msg is: %s\n", msg);       //erro.出错打印请求信息
 				goto e_parse;
 			}
 			re_pool_parser(parser);
@@ -252,7 +253,7 @@ static user_t * get_user_from_wait()
 	 */
 	while (pool_queue->cur_size == 0 && !pool_queue->shutdown)
 	{
-//        printf("thread 0x%x is waiting\n",  pthread_self());
+        printf("thread 0x%x is waiting\n",  pthread_self());
 		pthread_cond_wait(&(pool_queue->ready), &(pool_queue->mutex));
 	}
 	/*线程池要销毁了*/
@@ -260,11 +261,11 @@ static user_t * get_user_from_wait()
 	{
 		/*遇到break,continue,return等跳转语句，千万不要忘记先解锁*/
 		pthread_mutex_unlock(&(pool_queue->mutex));
-//		printf("thread 0x%x will exit\n", (unsigned int) pthread_self());
+        printf("thread 0x%x will exit\n", pthread_self());
 		pthread_exit(NULL);
 	}
 
-//	printf("thread 0x%x is starting to work\n", (unsigned int) pthread_self());
+    printf("thread 0x%x is starting to work\n",pthread_self());
 
 	//printf("等待队列的当前大小%d\n", pool->cur_queue_size);
 	/*assert是调试的好帮手*/
@@ -363,7 +364,7 @@ static int pool_read_parse(int socket, parser_t * parser, long *count)
 		switch (size)
 		{
 		case 0:
-			printf("%u-->数据接收完毕:大小(%ld)\n",   pthread_self(),
+			printf("%u-->数据接收完毕:大小(%ld)\n",   pthread_self() ,
 					*count);
 			return 0;
 			break;
@@ -379,7 +380,7 @@ static int pool_read_parse(int socket, parser_t * parser, long *count)
 			}
 			break;
 		default:
-			/*进行解析处理*/
+			/*否则 进行解析处理*/
 			rst = parser->parse_enter(parser, (int)size);
 			switch (rst)
 			{

@@ -13,38 +13,29 @@
 #include "../global.h"
 #include "../utils/url.h"
 
-/*数据库*/
-struct database_pool{
-	URL_T url;
-	Connection_T con;
-};
-
-//#define T database_pool_p
-//typedef struct database_pool* T;
-
-typedef struct mysql_conn_st {
-	MYSQL conn;
-	int dbconnected;
-	pthread_mutex_t mysql_lock;
-	pthread_cond_t mysql_cond;
-}mysql_t;
-
-//extern mysql_t* db;  //cpp 定义？？？
-
 typedef struct page_st {  //包含一个网页的url和所有的file文件名
 	url_t* url;/*页面的url*/
 	ResultSet_T files_result_set;/*页面内嵌的资源*/
 }page_t;
 
+
+
+
+
+#pragma mark 虚拟用户表相关 数据库操作
 extern void insert_wait_user(Connection_T con, int num, int off_num , int browse_num);
 extern void insert_user(Connection_T con, int num );
 extern void insert_log(Connection_T con,  void *user, struct timeval *tstart,struct timeval *tend, long count);
 
+#pragma mark connection_pool 相关 连接/释放
 extern ConnectionPool_T init_connection_pool(const char *url_str);
 extern void free_connection_pool(ConnectionPool_T pool);
 
-int add_page(Connection_T con, page_t * page);
+#pragma mark 目标资源相关 数据库操作
+int add_page(Connection_T con, page_t * page);  //程序中没有使用该接口
 extern page_t * get_page(Connection_T con, int index);
 extern void free_page(page_t * page);
+
+
 
 #endif /* NTGS_MYSQL_H_ */

@@ -15,30 +15,15 @@
 
 #define Con_T Connection_T
 
-static int get_page_id(Connection_T con, char * url); //private 方法
-
-
-//get_page_id 获取指定url的页面id
-static int get_page_id(Connection_T con, url_t * url) {
-    int p_id = -1;
-    ResultSet_T rst;
-    char *urlstr=url_to_str(url);
-
-    rst = Connection_executeQuery(con, "select id from page_t where url = '%s'",
-                                  urlstr);
-    if (ResultSet_next(rst)) {
-        p_id = ResultSet_getInt(rst, 1);
-        return p_id;
-    }
-    return p_id;
-}
+//内部方法（private）
+static int get_page_id(Connection_T con, url_t * url) ;
 
 ConnectionPool_T init_connection_pool(const char *url_str) {
-	ConnectionPool_T pool1 = NULL;
+	ConnectionPool_T pool = NULL;
 	URL_T url = URL_new(url_str);
-	pool1 = ConnectionPool_new(url); //新建一个连接池结构体，并分配内存
-	ConnectionPool_start(pool1);
-	return pool1;
+	pool = ConnectionPool_new(url); //新建一个连接池结构体，并分配内存
+	ConnectionPool_start(pool);
+	return pool;
 }
 
 void free_connection_pool(ConnectionPool_T pool) {
@@ -48,7 +33,7 @@ void free_connection_pool(ConnectionPool_T pool) {
 }
 
 int add_page(Connection_T con, page_t * page) {
-        int res, id = -1;
+        int id = -1;
         ResultSet_T rst;
 
         id = get_page_id(con, page->url);  //是否已经存在
@@ -108,3 +93,18 @@ void insert_wait_user(Connection_T con, int num, int off_num, int browse_num) {
 			num, off_num, num - off_num, num - off_num - browse_num);
 }
 
+#pragma mark - 内部函数实现
+//get_page_id 获取指定url的w网页 id 数据库中的序号
+int get_page_id(Connection_T con, url_t * url) {
+    int p_id = -1;
+    ResultSet_T rst;
+    char *urlstr=url_to_str(url);
+    
+    rst = Connection_executeQuery(con, "select id from page_t where url = '%s'",
+                                  urlstr);
+    if (ResultSet_next(rst)) {
+        p_id = ResultSet_getInt(rst, 1);
+        return p_id;
+    }
+    return p_id;
+}

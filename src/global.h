@@ -29,9 +29,8 @@ extern int user_num;
 extern ConnectionPool_T pool;
 extern ConnectionPool_T log_pool;
 
-/*
- * 用户的抽象
- */
+
+#pragma mark 用户的抽象
 typedef struct user user_t;
 
 struct user
@@ -93,7 +92,7 @@ typedef struct
 	int max_thread_num;
 } b_queue;
 
-/*定义全局队列指针*/
+#pragma mark 定义全局队列指针*/
 extern a_queue *offline_queue;/*离线队列*/
 extern a_queue *browse_queue;/*浏览队列*/
 extern b_queue *pool_queue;/*线程池队列*/
