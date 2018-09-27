@@ -79,7 +79,7 @@ static void err_doit(int errnoflag, int level, const char *fmt, va_list ap)
 #else
 	vsprintf(buf, fmt, ap);					/* not safe */
 #endif
-	n = strlen(buf);
+	n = (int)strlen(buf);
 	if (errnoflag)
 		snprintf(buf + n, MAXLINE - n, ": %s", strerror(errno_save));
 	strcat(buf, "\n");

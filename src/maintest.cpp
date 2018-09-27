@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 	/*测试1*/
         url_t *url;
         int size;
-        int rcv_len;
+        int64_t rcv_len;
         int sockfd;
         char const *str_urls = "http://hongyan.cqupt.edu.cn/web/"
                     "admin/upload/pictures/thumbnail_1300252276_0.jpg,"

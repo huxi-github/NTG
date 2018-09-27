@@ -152,7 +152,7 @@ static void* thread_routine(void *arg)
 			if (parser->isconnect)
 			{
                 
-				if (sockfd > 0)  //检查该sockfd是否，没有被释放的 描述符
+				if (sockfd > 0)  //检查该sockfd是否，没有被释放的 描述符  ok
 				{
 					Close(sockfd);
 					sockfd = -1;
@@ -351,7 +351,8 @@ static void re_pool_parser(parser_t *parser)
 static int pool_read_parse(int socket, parser_t * parser, long *count)
 {
 //	uint64_t count = 0; //统计接收的数据
-	int32_t rst, size;
+    int rst;
+    int64_t size;
 	for (;;)
 	{
 		int p = parser->pos;
@@ -379,7 +380,7 @@ static int pool_read_parse(int socket, parser_t * parser, long *count)
 			break;
 		default:
 			/*进行解析处理*/
-			rst = parser->parse_enter(parser, size);
+			rst = parser->parse_enter(parser, (int)size);
 			switch (rst)
 			{
 			case 0:

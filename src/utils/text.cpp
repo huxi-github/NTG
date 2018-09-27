@@ -77,8 +77,8 @@ int is_startWithIgnoreCase(char const *amin, char *b)
  */
 int is_endWith(char *a, char *b)
 {
-	int la = strlen(a);
-	int lb = strlen(b);
+	int la = (int)strlen(a);
+	int lb = (int)strlen(b);
 	return (la <= lb) && !strcmp(a, b + lb - la);
 }
 
@@ -87,8 +87,8 @@ int is_endWith(char *a, char *b)
  */
 int endWithIgnoreCase(char *amin, char *b)
 {
-	int la = strlen(amin);
-	int lb = strlen(b);
+	int la = (int)strlen(amin);
+	int lb = (int)strlen(b);
 	if (la <= lb)
 	{
 		int i;
@@ -112,7 +112,7 @@ int endWithIgnoreCase(char *amin, char *b)
 int caseContain(char *a, char *b)
 {
 	size_t la = strlen(a);
-	int i = strlen(b) - la;
+	int i = int(strlen(b) - la);
 	while (i >= 0)
 	{
 		if (!strncasecmp(a, b + i, la))
@@ -160,7 +160,7 @@ char *readfile(int fds) {
 				char *tmp = new
 				char[size];
 				memcpy(tmp, res, pos);
-				delete res;
+				delete[] res;
 				res = tmp;
 			}
 			memcpy(res + pos, buf, nbRead);

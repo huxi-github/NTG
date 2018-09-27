@@ -156,7 +156,7 @@ void setfileofurl(url_t* url, const char *file)
 	{
 		free(url->file);
 	}
-	len = strlen(file) + strlen(url->pre_path);
+	len = (int)(strlen(file) + strlen(url->pre_path));
 	url->file = (char *)Calloc(len + 1, sizeof(char));
 	strcpy(url->file, url->pre_path);
 	strcat(url->file, file);
