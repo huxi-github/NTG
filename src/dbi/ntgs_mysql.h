@@ -22,16 +22,22 @@ typedef struct page_st {  //包含一个网页的url和所有的file文件名
 
 
 
+#ifdef __APPLE__
 #pragma mark 虚拟用户表相关 数据库操作
+#endif
 extern void insert_wait_user(Connection_T con, int num, int off_num , int browse_num);
 extern void insert_user(Connection_T con, int num );
 extern void insert_log(Connection_T con,  void *user, struct timeval *tstart,struct timeval *tend, long count);
 
+#ifdef __APPLE__
 #pragma mark connection_pool 相关 连接/释放
+#endif
 extern ConnectionPool_T init_connection_pool(const char *url_str);
 extern void free_connection_pool(ConnectionPool_T pool);
 
+#ifdef __APPLE__
 #pragma mark 目标资源相关 数据库操作
+#endif
 int add_page(Connection_T con, page_t * page);  //程序中没有使用该接口
 extern page_t * get_page(Connection_T con, int index);
 extern void free_page(page_t * page);

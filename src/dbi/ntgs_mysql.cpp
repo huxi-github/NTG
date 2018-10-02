@@ -34,7 +34,7 @@ void free_connection_pool(ConnectionPool_T pool) {
 
 int add_page(Connection_T con, page_t * page) {
         int id = -1;
-        ResultSet_T rst;
+//        ResultSet_T rst;
 
         id = get_page_id(con, page->url);  //是否已经存在
         if (id > 0)
@@ -93,7 +93,7 @@ void insert_wait_user(Connection_T con, int num, int off_num, int browse_num) {
 			num, off_num, num - off_num, num - off_num - browse_num);
 }
 
-#pragma mark - 内部函数实现
+//#pragma mark - 内部函数实现
 //get_page_id 获取指定url的w网页 id 数据库中的序号
 int get_page_id(Connection_T con, url_t * url) {
     int p_id = -1;

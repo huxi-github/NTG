@@ -75,7 +75,7 @@ int ain(int ar, char ** argv)
 //	log_pool = init_connection_pool("mysql://localhost/userlog?user=root&password=123456");
 //	pool_init(MAX_THREAD_NUM);
 //	print_a_property(offline_queque);
-//	print_a_property(browse_queue);
+	print_a_property(browse_queue);
 	pthread_t *a = (pthread_t*)calloc(1, sizeof(pthread_t));
 	pthread_t *b = (pthread_t*)calloc(1, sizeof(pthread_t));
 	pthread_create(a, NULL, scan_routine, offline_queue);

@@ -13,7 +13,7 @@
 static int http_parse_startline(http_parser* parser);
 static int http_parse_header(http_parser* parser);
 static void print_parser(http_parser *parser);
-static int http_parse_header30x(http_parser *parser);
+//static int http_parse_header30x(http_parser *parser);
 /*
  * http_request_message 函数 用于构造http请求消息
  * 参数：
@@ -118,10 +118,19 @@ int http_parser_handle(http_parser* parser, int size) {
 
 		/*********************************************/
 		if (posn != NULL) {
+#ifdef __APPLE__
 			printf("posn  size---->%ld\n", posn - parser->h_com.area);
+
 			printf("posn size of posParse---> %ld\n",
 					posn - parser->h_com.posParse);
 			printf("posn---->%ld\n", posn - parser->h_com.buffer);
+
+#else
+			printf("posn  size---->%d\n", posn - parser->h_com.area);
+			printf("posn size of posParse---> %d\n",
+								posn - parser->h_com.posParse);
+			printf("posn---->%d\n", posn - parser->h_com.buffer);
+#endif
 			char buf[1024];
 			snprintf(buf, (posn - parser->h_com.area) + 1, "%s",
 					parser->h_com.area);
@@ -171,7 +180,12 @@ int http_parser_handle(http_parser* parser, int size) {
 			if (posn != NULL && parser->ischunk) {/*ischunk = 1 说明chunk编码实体还未结束*/
 				parser->h_com.posParse = posn;
 				printf("area----->%ld\n",
+#ifdef __APPLE__
 						parser->h_com.area - parser->h_com.buffer);
+#else
+						(long)(parser->h_com.area - parser->h_com.buffer));
+#endif
+
 				int len = gstrhextonum(parser->h_com.area);
 				if (len > 0) {
 					parser->chunk_size = len + 2;/*\r\n*/
@@ -322,33 +336,33 @@ static void print_parser(http_parser *parser) {
  * 		1-->出错
  * 	注：尚未实现
  */
-static int http_parse_header30x(http_parser *parser1) {
-    
-    parser_t parser=parser1->h_com;
-
-	if (parser.posParse - parser.area < 2) {
-		// end of http headers without location => err40X
-		errno = err40X;
-		return 1;
-	} else {
-		if (is_startWithIgnoreCase("location: ", parser.area)) {
-            char *area=parser.area;
-			int i = 10;
-			while (area[i] != ' ' && area[i] != '\n' && area[i] != '\r') {
-				i++;
-			}
-            /**
-			if (notCgiChar(area[i])) {
-				area[i] = 0; // end of url
-				// read the location (do not decrease depth)
-				url *nouv = new url(area + 10, here->getDepth(), base);
-
-				manageUrl(nouv, true);
-				// we do not need more headers
-			}**/  //do what thing??
-			errno = err30X;
-			return 1;
-		}
-	}
-	return 0;
-}
+//static int http_parse_header30x(http_parser *parser1) {
+//
+//    parser_t parser=parser1->h_com;
+//
+//	if (parser.posParse - parser.area < 2) {
+//		// end of http headers without location => err40X
+//		errno = err40X;
+//		return 1;
+//	} else {
+//		if (is_startWithIgnoreCase("location: ", parser.area)) {
+//            char *area=parser.area;
+//			int i = 10;
+//			while (area[i] != ' ' && area[i] != '\n' && area[i] != '\r') {
+//				i++;
+//			}
+//            /**
+//			if (notCgiChar(area[i])) {
+//				area[i] = 0; // end of url
+//				// read the location (do not decrease depth)
+//				url *nouv = new url(area + 10, here->getDepth(), base);
+//
+//				manageUrl(nouv, true);
+//				// we do not need more headers
+//			}**/  //do what thing??
+//			errno = err30X;
+//			return 1;
+//		}
+//	}
+//	return 0;
+//}

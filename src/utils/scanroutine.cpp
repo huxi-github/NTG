@@ -22,9 +22,9 @@ void * scan_routine(void *arg)
 	int size;
 	a_queue *queue = (a_queue*) arg;
 	struct timespec tm;
-	struct timeval tend, tstart;
-	long count = 0;
-	double usec;
+//	struct timeval tend, tstart;
+//	long count = 0;
+//	double usec;
 
 	/*线程无限环*/
 	for (;;)

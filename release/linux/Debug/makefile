@@ -49,7 +49,7 @@ all: ntg_linux
 ntg_linux: $(OBJS) $(USER_OBJS)
 	@echo '正在构建目标： $@'
 	@echo '正在调用： GNU C++ 链接器'
-	g++ -L"/home/hadoop/桌面/tips/NTG/thirdparty/libs" -o"ntg_linux" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/lib -L"/mnt/hgfs/Documents/NTG10/thirdparty/libs/linux" -L/usr/lib/mysql -o"ntg_linux" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo '已结束构建目标： $@'
 	@echo ' '
 
