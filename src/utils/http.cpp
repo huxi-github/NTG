@@ -118,6 +118,8 @@ int http_parser_handle(http_parser* parser, int size) {
 
 		/*********************************************/
 		if (posn != NULL) {
+
+
 #ifdef __APPLE__
 			printf("posn  size---->%ld\n", posn - parser->h_com.area);
 
@@ -131,6 +133,8 @@ int http_parser_handle(http_parser* parser, int size) {
 								posn - parser->h_com.posParse);
 			printf("posn---->%d\n", posn - parser->h_com.buffer);
 #endif
+
+
 			char buf[1024];
 			snprintf(buf, (posn - parser->h_com.area) + 1, "%s",
 					parser->h_com.area);

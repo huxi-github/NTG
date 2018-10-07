@@ -21,6 +21,9 @@
 #include "dbi/ntgs_mysql.h"
 
 
+#define OFF_LINE_QUEUE_T 1
+#define BROWSER_QUEUE_T  0
+
 extern int user_num;
 
 /*
@@ -123,10 +126,9 @@ struct parser_common
 	int (*parse_enter)(void* parser, int size);
 };
 
-extern void init(void);
-extern void * scan_routine(void *arg);
+extern void user_quene_init(void);
 extern void insert_queue(void * queue, int type, user_t* user);
 extern void set_user_property(user_t *user, int p_type, void * value);
-extern void * scan_routine(void *arg);
+extern void * scan_routine(void *arg);  //却是在 scanroutine.cpp 定义实现
 
 #endif /* GLOBAL_H_ */

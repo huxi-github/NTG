@@ -13,7 +13,7 @@ int tcp_connect(const char *host, const char *serv) {
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 
-	if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)
+	if ((n = getaddrinfo(host, serv, &hints, &res)) != 0)  //Translate name of a service location and/or a service name to set of socket addresses.
 		err_quit("tcp_connect error for %s, %s: %s", host, serv,
 				gai_strerror(n));
 	ressave = res;
@@ -21,17 +21,23 @@ int tcp_connect(const char *host, const char *serv) {
 	do {
 		sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 		if (sockfd < 0)
+		{
+			printf("create sockfd failed");
 			continue; /* ignore this one */
-
+		}
 		if (connect(sockfd, res->ai_addr, res->ai_addrlen) == 0)
 			break; /* success */
+
+		printf("connect failed close sockfd=%d",sockfd);
 		Close(sockfd); /* ignore this one */
+
 	} while ((res = res->ai_next) != NULL);
 
-	if (res == NULL) {/* errno set from final connect() */
-		err_msg("tcp_connect error for %s, %s", host, serv);
-		sockfd = -1;
-	}
+//	if (res == NULL) {/* errno set from final connect() */
+//		err_msg("tcp_connect error for %s, %s", host, serv);
+//		printf("tcp_connect error for %s, %s\n", host, serv);
+//		sockfd = -1;  //why do this
+//	}
 
 	freeaddrinfo(ressave);
 

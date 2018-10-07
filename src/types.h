@@ -12,7 +12,7 @@
 #define MESSAGE_SIZE 1024//请求消息大小
 
 #define URL_SIZE        1024 		/*URL的长度限制*/
-#define USER_MAX     user_num  /*模拟的用户数*/
+#define USER_MAX      user_num  /*模拟的用户数*/
 
 #define MAX_THREAD_NUM 40/*线程池中最大的线程数*/
 //这些时间都是以秒为单为（毫秒）

@@ -33,6 +33,7 @@ void free_connection_pool(ConnectionPool_T pool) {
 }
 
 int add_page(Connection_T con, page_t * page) {
+	printf("add_page");
         int id = -1;
 //        ResultSet_T rst;
 
@@ -44,19 +45,22 @@ int add_page(Connection_T con, page_t * page) {
 }
 
 page_t * get_page(Connection_T con, int index) {
+	printf("get_page");
 	page_t* page = NULL;
 	ResultSet_T rst;
 	page = (page_t*)Calloc(1, sizeof(page_t));
-
+	printf("get urls from db index=%d",index);
 	rst = Connection_executeQuery(con, "select url from page_t where id = '%d'",  //page_t 表
 			index);
 	if (!ResultSet_next(rst))
 		goto e_result_set;
-	page->url = paser_url(ResultSet_getString(rst, 1),
+	printf("pares url..");
+	page->url = paser_url(ResultSet_getString(rst, 1),   //ResultSet 迭代器的（）一行ResultSet_getString(rst, cumlum_Index)
 			(int)ResultSet_getColumnSize(rst, 1));
     
 	page->files_result_set = Connection_executeQuery(con,
 			"select file_path from resource_t where page_id = '%d'", index);
+	printf("pares url ok");
 	return page;
 
 	e_result_set: free(page);
@@ -71,6 +75,7 @@ void free_page(page_t * page) {
 
 void insert_log(Connection_T con, void*u, struct timeval *tstart, struct timeval *tend,
 		long count) {
+	printf("insert_log");
 	long usec;
 	user_t* user;
 	user = (user_t*) u;
@@ -83,11 +88,13 @@ void insert_log(Connection_T con, void*u, struct timeval *tstart, struct timeval
 }
 
 void insert_user(Connection_T con, int num) {
+	printf("inser_user");
 	Connection_execute(con,
 			"insert into offusers_t value(null, '%d',UNIX_TIMESTAMP())", num);
 }
 
 void insert_wait_user(Connection_T con, int num, int off_num, int browse_num) {
+	printf("insert_wait_user");
 	Connection_execute(con,
 			"insert into users_t value(null, '%d', '%d', '%d', '%d',UNIX_TIMESTAMP())",
 			num, off_num, num - off_num, num - off_num - browse_num);
@@ -96,6 +103,7 @@ void insert_wait_user(Connection_T con, int num, int off_num, int browse_num) {
 //#pragma mark - 内部函数实现
 //get_page_id 获取指定url的w网页 id 数据库中的序号
 int get_page_id(Connection_T con, url_t * url) {
+	printf("get_page_id");
     int p_id = -1;
     ResultSet_T rst;
     char *urlstr=url_to_str(url);

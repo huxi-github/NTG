@@ -17,7 +17,7 @@ ssize_t Read(int fd, void *ptr, size_t nbytes)
 
 void Write(int fd, void *ptr, size_t nbytes)
 {
-	if (write(fd, ptr, nbytes) != nbytes)
+	if ((size_t)write(fd, ptr, nbytes) != nbytes) //问题
 		err_sys("write error");
 }
 

@@ -14,7 +14,7 @@ static void print_a_property(a_queue * queue);
 void * signal_thread(void *arg);
 sigset_t mask;
 
-int ain(int ar, char ** argv)
+int main(int ar, char ** argv)
 {
 
 	pthread_t tid;
@@ -49,33 +49,34 @@ int ain(int ar, char ** argv)
 //		ResultSet_T result = Connection_executeQuery(con,
 //				"select host,user, password from user"); //使用此连接执行查询数据操作
 
-	FILE *fp = fopen("/home/test/config/config.txt", "r");
-	if (fp == NULL)
-	{
-		printf("open a.txt file failed!\n");
-		exit(0);
-	}
-	while (fscanf(fp, "%d", &user_num))
-	{
-//		total[label] += value;
-		if (feof(fp))
-		{
-			break;
-		}
-	}
+//	FILE *fp = fopen("/home/test/config/config.txt", "r");
+//	if (fp == NULL)
+//	{
+//		printf("open a.txt file failed!\n");
+//		exit(0);
+//	}
+//	while (fscanf(fp, "%d", &user_num))
+//	{
+////		total[label] += value;
+//		if (feof(fp))
+//		{
+//			break;
+//		}
+//	}
 
-//	user_num = 2000;
+	user_num = 200;
 //	fprintf(fp,"%s=%s\n",items[i].key, items[i].value);
 
-	init();
-	pool = init_connection_pool(
-			"mysql://172.23.22.27/gzb?user=root&password=HPflow123");
-	pool_init(MAX_THREAD_NUM);
+	user_quene_init();
 
-//	log_pool = init_connection_pool("mysql://localhost/userlog?user=root&password=123456");
-//	pool_init(MAX_THREAD_NUM);
-//	print_a_property(offline_queque);
+	pool = init_connection_pool(
+			"mysql://localhost/test?user=root&password=");
+
+	thread_pool_init(MAX_THREAD_NUM); //threadPoolInit
+
+	print_a_property(offline_queue);
 	print_a_property(browse_queue);
+
 	pthread_t *a = (pthread_t*)calloc(1, sizeof(pthread_t));
 	pthread_t *b = (pthread_t*)calloc(1, sizeof(pthread_t));
 	pthread_create(a, NULL, scan_routine, offline_queue);
@@ -140,7 +141,14 @@ void * signal_thread(void *arg)
 
 void print_a_property(a_queue * queue)
 {
-    printf("usrId:%u,\t%d,\t%d, \t%d, \t%d\n", queue->head->next->id,
+	 if(OFF_LINE_QUEUE_T==queue->type){
+		 printf("queueType: OFF_LINE_QUEUE\n");
+	 }else if(BROWSER_QUEUE_T==queue->type){
+		 printf("queueType: BROWSER_QUEUE\n");
+	 }else {
+		 printf("queueType: TYPE WRONG\n");
+	}
+    printf("usrId:%u,\t cycle:%d,\t temp_value:%d, \t shutdown:%d, \t cur_size:%d\n", queue->head->next->id,
 			queue->cycle, queue->temp_value, queue->shutdown, queue->cur_size);
 	return;
 }

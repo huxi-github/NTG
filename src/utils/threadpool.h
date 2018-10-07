@@ -42,7 +42,7 @@ typedef struct
 	int cur_queue_size;
 } CThread_pool;
 
-extern void pool_init(int max_thread_num);
-extern int pool_destroy();
+extern void thread_pool_init(int max_thread_num);
+extern int thread_pool_destroy();
 
 #endif /* THREADPOOL_H_ */

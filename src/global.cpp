@@ -29,32 +29,36 @@ static user_t * user_init(user_t * user, int id, int type, int time);
  * 返回：无
  *
  */
-void init(void)
+void user_quene_init(void)
 {
 
 	/*为离线队列和浏览队列分配空间*/
 	offline_queue = (a_queue*)calloc(1, sizeof(a_queue));
 	browse_queue = (a_queue*)calloc(1, sizeof(a_queue));
 	/*初始化队列*/
-	aq_init(offline_queue, 1, OFF_CYCLE);
-	aq_init(browse_queue, 0, BR_CYCLE);
+	aq_init(offline_queue, OFF_LINE_QUEUE_T, OFF_CYCLE);
+	aq_init(browse_queue, BROWSER_QUEUE_T, BR_CYCLE);
 
 	/*给用户分配内存空间*/
-	user_t *puser = (user_t *)calloc(USER_MAX, sizeof(user_t));
+//	user_t *puser = (user_t *)calloc(USER_MAX, sizeof(user_t));  // 连续的堆空间 USER_MAX*sizeof(user_t)
 	/*初始化用户并加入队列*/
 	srand((unsigned) time(NULL));
 	int i = 0;
+	printf("USER_MAX:%d",USER_MAX);
 	for (; i < USER_MAX; ++i)
 	{
 		int time = 1 + rand() % UM_TIME;/*生成[1,720]间的随机数*/
+		user_t *puser = (user_t *)malloc(sizeof(user_t));  // 连续的堆空间 USER_MAX*sizeof(user_t)
 		user_init(puser, i, WEB_USER, time);/*初始化用户*/
 		/*根据用户状态，将用户分别插入到相应队列*/
 		if ((time > UM_BROWSE_TIME) && (offline_queue->cur_size < USER_MAX / 4))
 		{/*大于UM_BROWSE_TIME（ms）将用户加入到离线队列**/
+			printf("insert a Q_a user to offline_queue\n");
 			insert_queue(offline_queue, Q_A, puser);
 		}
 		else
 		{
+			printf("insert a Q_a user to browse_queue\n");
 			insert_queue(browse_queue, Q_A, puser);
 		}
 		++puser;
@@ -112,6 +116,41 @@ static user_t * user_init(user_t * user, int id, int type, int time)
 	user->next = NULL;
 	return user;
 }
+/*
+ *user_init() 初始化用户的属性
+ *参数：
+ *		user-->用户的指针(已分配内存空间)
+ *		id-->用户的id
+ *		type-->用户的类别(WEB_USER和STREAM_USER)
+ *		state-->用户的状态
+ *		url-->访问的URL
+ *		time-->初始化用户的浏览时间
+ *	返回：用户的指针
+ *	注：在分配用户空间下调用，
+ */
+//static user_t * user_init(user_t * user0, int id, int type, int time)
+//{
+//	user_t* user=user0+id;  //用户数组中的某一个（）定位
+//	user->id = id;
+//	user->type = type;
+//	user->time = time;
+//	if (time > UM_BROWSE_TIME)
+//		user->state = US_OFFLINE;
+//	else
+//		user->state = US_BROWSE;
+//
+//	if (type == WEB_USER)
+//	{/*如果为Web用户*/
+//		user->ops = &web_user_ops;/*初始化用户的操作函数*/
+//	}
+//	else
+//	{/*为流媒体用户*/
+//
+//	}
+//	user->next = NULL;
+//	return user;
+//}
+
 
 /*
  * set_user_property() 设置用户的属性
@@ -155,7 +194,7 @@ void set_user_property(user_t *user, int p_type, void * p_value)
  *		user-->插入对象指针
  *	返回：	void
  */
-void insert_queue(void * queue, int type, user_t* user)
+void insert_queue(void * queue, int type, user_t* pUser)
 {
 
 	switch (type)
@@ -166,26 +205,28 @@ void insert_queue(void * queue, int type, user_t* user)
 		pthread_mutex_lock(&a_q->mutex);
 		int size = a_q->cur_size++;
 		/*user对象插入队列*/
+//		printf("insert a Q_a user User-state:%d\n",user->state);
 		if (size == 0)
 		{ /*队列为空时* */
-			a_q->head->next = user;
-			a_q->tail = user;/*修改队列的tail属性* */
+			a_q->head = pUser;
+			a_q->tail = pUser;/*修改队列的tail属性* */
+			a_q->head->next = NULL;
 			pthread_mutex_unlock(&a_q->mutex);
 			pthread_cond_signal(&a_q->cond);/*通知定时刷新线程*/
 			return;
 		}
 		/*队列不为空时*/
 		/*获取元素的插入位置**/
-		user_t * ip = search_insert_point(a_q->head, a_q->tail, user->time);
+		user_t * ip = search_insert_point(a_q->head, a_q->tail, pUser->time);
 		if (ip == a_q->tail)
 		{/*当插入队列尾部时*/
-			ip->next = user;
-			a_q->tail = user;
+			ip->next = pUser;
+			a_q->tail = pUser;
 		}
 		else
 		{
-			user->next = ip->next;
-			ip->next = user;
+			pUser->next = ip->next;
+			ip->next = pUser;
 		}
 		pthread_mutex_unlock(&a_q->mutex);
 	}
@@ -195,15 +236,18 @@ void insert_queue(void * queue, int type, user_t* user)
 		b_queue * thread_pool = (b_queue *)queue;
 		pthread_mutex_lock(&thread_pool->mutex);
 		user_t *member = thread_pool->head;
+//		printf("insert a user to Q_B (Runnerable task to threadpool)\n");
+		printf("insert a user to threadpoolquene (Runnerable task to threadpool) user>state==:%d\n",pUser->state);
 		if (member != NULL)
 		{ /*等待队列不为空*   */
-			thread_pool->tail->next = user;
-			thread_pool->tail = user;
+			thread_pool->tail->next = pUser;
+			thread_pool->tail = pUser;
 		}
 		else
 		{ /*等待队列为空*/
-			thread_pool->head = user;
-			thread_pool->tail = user;
+			thread_pool->head = pUser;
+			thread_pool->tail = pUser;
+			pUser->next=NULL;
 		}
 		thread_pool->cur_size++;
 		assert(thread_pool->cur_size != 0);

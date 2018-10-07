@@ -51,11 +51,10 @@ ssize_t web_receive_and_print(int sockfd, char *buf, size_t buf_size)
 void web_behavior(void * u)
 {
 	/*初始化用户并加入队列*/
-	user_t* user;
-	user = (user_t*) u;
+	user_t* user=(user_t*) u;
 	srand((unsigned) time(NULL));     //time(NULL) 以当前时间-为随机数种子
 	user->time = 1 + rand() % UM_TIME;/*生成[1,UM_TIME+1]间的随机数*/
-	user->page_id = 1 + rand() % 27;  /*生成[1,28]间的随机数*/
+	user->page_id = 1 + rand() % 2;  /*生成[1,3]间的随机数*/  // 访问的页面id
 //    strncpy(user->url, url, strlen(url));
 	snprintf(user->url, URL_SIZE,"%s","http://hongyan.cqupt.edu.cn/web/");  //红岩网校 的 地址（有效的）
 }

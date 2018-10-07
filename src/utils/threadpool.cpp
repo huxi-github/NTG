@@ -18,7 +18,7 @@ static user_t * get_user_from_wait();
 static void reset_user(user_t * user);
 static void replace_user(user_t *user);
 
-static parser_t* init_pool_parser(char * buffer, int user_type);
+static parser_t* init_a_pool_parser(char * buffer, int user_type);
 static void free_pool_parser(parser_t* parser);
 static void re_pool_parser(parser_t *parser);
 static int pool_read_parse(int socket, parser_t * parser, long *count);
@@ -29,7 +29,7 @@ static int pool_read_parse(int socket, parser_t * parser, long *count);
  *		max_thread_num-->最大的线程数
  *	返回：无
  */
-void pool_init(int max_thread_num)
+void thread_pool_init(int max_thread_num)
 {
 
 	/*为线程池分配内存资源*/
@@ -60,7 +60,7 @@ void pool_init(int max_thread_num)
  * 返回：int
  * 		销毁成功返回0，失败返回-1
  */
-int pool_destroy()
+int thread_pool_destroy()
 {
 
 	if (pool_queue->shutdown)
@@ -116,9 +116,10 @@ static void* thread_routine(void *arg)
     {   int sh=-1;
 		long count = 0;
 		user = get_user_from_wait(); //从等待队列中Quene_b获取一个用户
-		reset_user(user); //调用用户行为函数
+		printf("\n get a user from taskquene\n");
+		reset_user(user); //调用用户行为函数                    //此处后 到 while 语句结束前可以 重构为一个函数doTaskthings  //doNTGthings
         int user_type=user->type;
-		parser = init_pool_parser(buff,user_type); //[1]初始化解析器
+		parser = init_a_pool_parser(buff,user_type); //[1]初始化解析器
 		if (parser == NULL)
 		{
 			goto e_parser;
@@ -131,6 +132,8 @@ static void* thread_routine(void *arg)
             {goto e_page;}
 		strcpy(user->url, page->url->host);
 		strcat(user->url, page->url->pre_path);
+
+		printf("\n user get a  urlstr from db ur=%s \n",user->url);
 
 //        int sh ;  //不要初始化，参看链接https://stackoverflow.com/questions/14274225/statement-goto-can-not-cross-variable-definition
 
@@ -157,6 +160,8 @@ static void* thread_routine(void *arg)
 					Close(sockfd);
 					sockfd = -1;
 				}
+				//builed connection
+				printf("create a connection\n");
 				sockfd = user->ops->builed(page->url->host); //1.建立链接
 				if (sockfd < 0)
 				{ //失败的日志记录
@@ -164,16 +169,19 @@ static void* thread_routine(void *arg)
 					goto e_sock_con;
 				}
 				parser->isconnect = 0;
+				printf("create a connection ok sockfd=%d\n",sockfd);
 			}
 
 			/*构造请求消息*/
+
+				printf("build_http_request_message\n");
             size = build_http_request_message(msg, MESSAGE_SIZE, HTTP_GET, page->url,
 					0);
 			printf("request:----------------->\n%s%s\n", page->url->host,
 					page->url->file);
 			/*Write的容错有待处理*/
-//            Write(sockfd, msg, size); //发送请求
-            user->ops->receive(sockfd, msg, size);         //2发送请求
+            Write(sockfd, msg, size); //发送请求             //2发送请求
+            user->ops->receive(sockfd, msg, size);
 
 			if (pool_read_parse(sockfd, parser, &count))   //3.解析并打印
 			{
@@ -193,6 +201,7 @@ static void* thread_routine(void *arg)
 //        printf("%s%s---------------->time-----------%ld(ms)\n", //
 //                page->url->host, page->url->pre_path, usec / 1000);
 		fflush(stdout);
+		printf("insert_log\n");
 		insert_log(con, user, &tstart, &tend, count);
 		printf("完成..................\n");
 		fflush(stdout);
@@ -203,8 +212,8 @@ static void* thread_routine(void *arg)
         e_parse:Close(sockfd);
         sockfd = -1;
         e_sock_con: free_page(page);
-        e_page: Connection_close(con);
-        e_con: free_pool_parser(parser);
+        e_page: Connection_close(con);  printf("get page failed...");
+        e_con: free_pool_parser(parser);printf("get connection failed...");
         e_parser: replace_user(user);		//重置用户
         }
         
@@ -253,7 +262,7 @@ static user_t * get_user_from_wait()
 	 */
 	while (pool_queue->cur_size == 0 && !pool_queue->shutdown)
 	{
-        printf("thread 0x%x is waiting\n",  pthread_self());
+       // printf("thread 0x%x is waiting\n",  pthread_self());
 		pthread_cond_wait(&(pool_queue->ready), &(pool_queue->mutex));
 	}
 	/*线程池要销毁了*/
@@ -261,12 +270,16 @@ static user_t * get_user_from_wait()
 	{
 		/*遇到break,continue,return等跳转语句，千万不要忘记先解锁*/
 		pthread_mutex_unlock(&(pool_queue->mutex));
-        printf("thread 0x%x will exit\n", pthread_self());
+    //    printf("thread 0x%x will exit\n", pthread_self());
 		pthread_exit(NULL);
 	}
 
-    printf("thread 0x%x is starting to work\n",pthread_self());
 
+#ifdef __APPLE__
+    printf("thread 0x%x is starting to work\n",pthread_self());
+	else
+		 printf("thread %d is starting to work\n",pthread_self());
+#endif
 	//printf("等待队列的当前大小%d\n", pool->cur_queue_size);
 	/*assert是调试的好帮手*/
 //	printf("pool_queue--------------->%d\n", pool_queue->cur_size);
@@ -297,13 +310,13 @@ static void reset_user(user_t * user)
  * 		user_type -->用户类型
  * 	返回：parser的指针
  */
-static parser_t * init_pool_parser(char * buffer, int user_type)
+static parser_t * init_a_pool_parser(char * buffer, int user_type)
 {
 	parser_t* parser = NULL;
 	switch (user_type)
 	{ //根据不同的类型进行处理
 	case WEB_USER:
-            parser =  (parser_t*)Calloc(1, sizeof(http_parser));  //强制转换  by huxi 2019.9.20
+      parser =  (parser_t*)Calloc(1, sizeof(http_parser));  //强制转换  by huxi 2019.9.20
 		init_http_parser((http_parser*) parser, buffer); //调用http解析器初始化函数
 		break;
 	case STREAM_USER:
@@ -364,8 +377,7 @@ static int pool_read_parse(int socket, parser_t * parser, long *count)
 		switch (size)
 		{
 		case 0:
-			printf("%u-->数据接收完毕:大小(%ld)\n",   pthread_self() ,
-					*count);
+			//printf("%ld-->数据接收完毕:大小%ld\n", pthread_self(),*count));
 			return 0;
 			break;
 		case -1:

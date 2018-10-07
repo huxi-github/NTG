@@ -16,20 +16,22 @@
 #include "dbi/ntgs_mysql.h"
 #include "utils/text.h"
 #include <stdio.h>
-int main(int argc, char **argv) {
+int main1(int argc, char **argv) {
 
-//    ConnectionPool_T pool;
-//    page_t* page;
-//    pool = init_connection_pool("mysql://localhost/urldb?user=root&password=123456");
-//    Connection_T con = ConnectionPool_getConnection(pool);
-//    page =  get_page(con, 2);
-//    printf("url = %s\n", page->url->file);
-//    while(ResultSet_next(page->result_set)){
-//        printf("%s\n", ResultSet_getString(page->result_set, 1));
-//    }
-//
-//    Connection_execute(con,"insert into log_t value(null, '%d','%d','%s','%d.%d','%d')",  //log_t 表
-//                2, 23, "hongyan.cqupt.edu.cn/web/", 12 , 24, 1023);
+    ConnectionPool_T pool;
+    page_t* page;
+    pool = init_connection_pool("mysql://localhost/test?user=root&password=");
+    Connection_T con = ConnectionPool_getConnection(pool);
+    page =  get_page(con, 2);
+    printf("url = %s\n", page->url->file);
+    while(ResultSet_next(page->files_result_set)){
+        printf("%s\n", ResultSet_getString(page->files_result_set, 1));
+    }
+
+    Connection_execute(con,"insert into log_t value(null, '%d','%d','%s','%d.%d','%d',%d)",  //log_t 表
+                2, 23, "hongyan.cqupt.edu.cn/web/", 12 , 24, 1023,2014);
+
+    printf("insert into log_t a line \n");
 
 
 //	/*测试is_startWithIgnoreCase*/
